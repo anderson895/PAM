@@ -86,19 +86,12 @@ if (isset($_SESSION['id'])) {
     </button>
 
     <!-- DROPDOWN MENU -->
-    <div id="procurementsDropdown" class="ml-8 space-y-2 hidden">
-        <a href="branches/list" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Supply Request</a>
-        <a href="branches/add" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Process Order</a>
-    </div>
+  
 
-    <!-- DROPDOWN TOGGLE BUTTON -->
-    <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
-        <div class="flex items-center space-x-3">
-            <span class="material-icons">work</span>
-            <span>Assets Management</span>
-        </div>
-        <span class="material-icons">expand_more</span>
-    </button>
+    <a href="supplyRequest" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+        <span class="material-icons">work</span>
+        <span>Supply Request</span>
+    </a>
 
     <!-- DROPDOWN MENU -->
     <div id="assetsDropdown" class="ml-8 space-y-2 hidden">

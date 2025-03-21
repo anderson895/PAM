@@ -31,12 +31,12 @@
         <i class="material-icons text-lg">search</i>
     </span>
     <input type="text" id="searchInput" placeholder="Search users..." 
-        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition">
+        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-red-400 transition">
 </div>
 
 <!-- User Table Card -->
 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <button id="adduserButton" class="bg-blue-500 text-white py-2 px-4 text-sm rounded-lg flex items-center hover:bg-blue-600 transition duration-300 mb-4">
+    <button id="adduserButton" class="bg-red-500 text-white py-2 px-4 text-sm rounded-lg flex items-center hover:bg-red-600 transition duration-300 mb-4">
         <span class="material-icons mr-2 text-base">person_add</span>
         Add New
     </button>
@@ -135,7 +135,7 @@
 
             <div class="flex justify-end gap-2">
                 <button type="button" class="updateUserModalClose bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded-md">Cancel</button>
-                <button id="btnUpdateUser" type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md">Update</button>
+                <button id="btnUpdateUser" type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md">Update</button>
             </div>
         </form>
     </div>
@@ -213,7 +213,7 @@
 
             <div class="flex justify-end gap-2">
                 <button type="button" class="addUserModalClose bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded-md">Cancel</button>
-                <button id="btnAdduser" type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md">Add new</button>
+                <button id="btnAdduser" type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md">Add new</button>
             </div>
         </form>
     </div>

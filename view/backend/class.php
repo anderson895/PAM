@@ -21,6 +21,18 @@ class global_class extends db_connect
     }
 
 
+    public function fetch_all_request(){
+        $query = $this->conn->prepare("SELECT * FROM `request`
+        LEFT JOIN users ON users.id = request.request_user_id
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
 
 
     public function Adduser($user_imageName, $user_employee_id_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
@@ -55,7 +67,18 @@ class global_class extends db_connect
     
     
 
-
+    public function CreateRequest($add_user_id, $cat_item, $material,$supplier_name,$supplier_company) {
+        $query = $this->conn->prepare(
+            "INSERT INTO `request` (`request_user_id`, `request_cat_item`, `request_material`,`request_supplier_name`, `request_supplier_company`) VALUES (?,?,?,?,?)"
+        );
+        $query->bind_param("issss", $add_user_id, $cat_item, $material,$supplier_name, $supplier_company);
+    
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
 
 
 
@@ -74,6 +97,44 @@ class global_class extends db_connect
         }
     }
 
+
+
+
+
+
+
+
+    public function ApproveUser($request_id){
+        $status = "Approve"; 
+        
+        $query = $this->conn->prepare(
+            "UPDATE `request` SET `request_status` = ? WHERE `request_id` = ?"
+        );
+        $query->bind_param("ss", $status, $request_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+
+
+
+    public function DeclineUser($request_id){
+        $status = "Decline"; 
+        
+        $query = $this->conn->prepare(
+            "UPDATE `request` SET `request_status` = ? WHERE `request_id` = ?"
+        );
+        $query->bind_param("ss", $status, $request_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
 
 
 

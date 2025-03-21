@@ -1,3 +1,30 @@
+
+$('#CreateRequestButton').click(function (e) { 
+    e.preventDefault();
+    $('#CreateRequestModal').fadeIn();
+  });  
+
+  $('.addUserModalClose').click(function (e) { 
+    e.preventDefault();
+    $('#CreateRequestModal').fadeOut();
+  });  
+
+   // Close Modal when clicking outside the modal content
+   $("#CreateRequestModal").click(function(event) {
+        if ($(event.target).is("#CreateRequestModal")) {
+            $("#CreateRequestModal").fadeOut();
+        }
+    });
+
+
+
+
+
+
+
+
+
+
 $('#adduserButton').click(function (e) { 
     e.preventDefault();
     $('#addUserModal').fadeIn();
@@ -63,7 +90,38 @@ $('#adduserButton').click(function (e) {
 
 
 
-
+$("#createRequestFrm").submit(function (e) {
+        e.preventDefault();
+    
+        $('.spinner').show();
+        $('#btnCreateRequest').prop('disabled', true);
+    
+        var formData = new FormData(this);
+        formData.append('requestType', 'CreateRequest');
+        
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                $('.spinner').hide();
+                $('#btnCreateRequest').prop('disabled', false);
+    
+                if (response.status == 200) {
+                    alertify.success('Success');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alertify.error('Sending failed, please try again.');
+                }
+            }
+        });
+    });
 
 
 
@@ -95,7 +153,7 @@ $('#adduserButton').click(function (e) {
                     alertify.success('Update Successful');
                     setTimeout(function () {
                         location.reload();
-                    }, 2000);
+                    }, 1000);
                 } else {
                     alertify.error('Sending failed, please try again.');
                 }
@@ -177,7 +235,7 @@ $('#adduserButton').click(function (e) {
     
     Swal.fire({
         title: 'Are you sure?',
-        text: 'You won\'t be able to revert this!',
+        text: 'Archive This',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
@@ -202,6 +260,60 @@ $('#adduserButton').click(function (e) {
                         Swal.fire(
                             'Error!',
                             response.message,  // Show the error message from the response
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem with the request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+
+
+
+$(document).on('click', '.togglerRequest', function(e) {
+    e.preventDefault();
+    
+    var request_id = $(this).data('request_id');
+    var action = $(this).data('action'); // Get action type (Approve/Decline)
+    var confirmText = action === 'ApproveUser' ? 'Approve this request?' : 'Decline this request?';
+    var successMessage = action === 'ApproveUser' ? 'Request Approved!' : 'Request Declined!';
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: confirmText,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, proceed!',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { request_id: request_id, requestType: action },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 200) {
+                        Swal.fire(
+                            'Success!',
+                            successMessage,
+                            'success'
+                        ).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            response.message,
                             'error'
                         );
                     }

@@ -157,6 +157,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
+    }else if($_POST['requestType'] =='ApproveUser'){
+
+
+        $request_id = $_POST['request_id'];
+
+        $result = $db->ApproveUser($request_id);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Approved Successful"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+    }else if($_POST['requestType'] =='DeclineUser'){
+
+
+        $request_id = $_POST['request_id'];
+
+        $result = $db->DeclineUser($request_id);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Request Declined"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+    }else if($_POST['requestType'] =='CreateRequest'){
+
+       
+        $add_user_id = htmlspecialchars(trim($_POST['add_user_id']));
+        $user_fullname = htmlspecialchars(trim($_POST['user_fullname']));
+        $user_designation = htmlspecialchars(trim($_POST['user_designation']));
+        $cat_item = htmlspecialchars(trim($_POST['cat_item']));
+        $material = htmlspecialchars(trim($_POST['material']));
+        $supplier_name = htmlspecialchars(trim($_POST['supplier_name']));
+        $supplier_company = htmlspecialchars(trim($_POST['supplier_company']));
+
+        $result = $db->CreateRequest($add_user_id, $cat_item, $material,$supplier_name,$supplier_company);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
     }
 }
 ?>

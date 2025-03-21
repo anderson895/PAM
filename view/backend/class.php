@@ -11,6 +11,81 @@ class global_class extends db_connect
         $this->connect();
     }
 
+    public function AddAssets($assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty){
+        $query = $this->conn->prepare(
+            "INSERT INTO `assets` (`asset_code`, `name`, `category_id`,`subcategory_id`,`office_id`,`price`, `condition_status`,`status`,`image`,`quantity`,`description`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+        );
+        $query->bind_param("sssssssssss", $assets_code, $assets_name, $assets_category,$assets_subcategory,$assets_Office,$assets_price, $assets_condition,$assets_status,$assets_imageName,$assets_qty,$assets_description);
+    
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+    public function UpdateAssets($assets_id, $assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price, $assets_qty) {
+        $query = $this->conn->prepare(
+            "UPDATE `assets` 
+             SET `asset_code` = ?, `name` = ?, `category_id` = ?, `subcategory_id` = ?, `office_id` = ?, 
+                 `price` = ?, `condition_status` = ?, `status` = ?, `image` = ?, `quantity` = ?, `description` = ?
+             WHERE `id` = ?"
+        );
+        
+        $query->bind_param("sssssssssssi", $assets_code, $assets_name, $assets_category, $assets_subcategory, $assets_Office, 
+                                        $assets_price, $assets_condition, $assets_status, $assets_imageName, $assets_qty, 
+                                        $assets_description, $assets_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+    
+    
+    public function fetch_all_office(){
+        $query = $this->conn->prepare("SELECT * FROM `offices`");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+    public function fetch_all_assets(){
+        $query = $this->conn->prepare("SELECT assets.*,categories.category_name,categories.id as cat_id,subcategories.subcategory_name,subcategories.id as sub_id,offices.office_name,offices.id as off_id
+        FROM `assets`
+        LEFT JOIN categories ON categories.id = assets.category_id 
+        LEFT JOIN subcategories ON subcategories.id = assets.subcategory_id 
+        LEFT JOIN offices ON offices.id = assets.office_id;
+
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+    public function fetch_all_subcategory(){
+        $query = $this->conn->prepare("SELECT * FROM `subcategories`");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+    public function fetch_all_category(){
+        $query = $this->conn->prepare("SELECT * FROM `categories`");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
     public function fetch_all_user(){
         $query = $this->conn->prepare("SELECT * FROM `users` where `status`='1'");
 
@@ -24,6 +99,7 @@ class global_class extends db_connect
     public function fetch_all_request(){
         $query = $this->conn->prepare("SELECT * FROM `request`
         LEFT JOIN users ON users.id = request.request_user_id
+        ORDER BY `request_id` DESC
         ");
 
         if ($query->execute()) {
@@ -65,7 +141,7 @@ class global_class extends db_connect
         }
     }
     
-    
+
 
     public function CreateRequest($add_user_id, $cat_item, $material,$supplier_name,$supplier_company) {
         $query = $this->conn->prepare(
@@ -79,6 +155,9 @@ class global_class extends db_connect
             return 'Error: ' . $query->error;
         }
     }
+    
+
+   
 
 
 
@@ -96,6 +175,21 @@ class global_class extends db_connect
             return 'Error: ' . $query->error;
         }
     }
+
+
+    public function deleteAssets($assets_id) {
+        $query = $this->conn->prepare(
+            "DELETE FROM `assets` WHERE `id` = ?"
+        );
+        $query->bind_param("i", $assets_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+    
 
 
 

@@ -1,3 +1,85 @@
+$('.togglerUpdateAssets').click(function (e) { 
+    e.preventDefault();
+
+    let id = $(this).data('id');
+    let asset_code = $(this).data('asset_code');
+    let name = $(this).data('name');
+    let description = $(this).data('description');
+    let price = $(this).data('price');
+    let category_id = $(this).data('category_id');
+    let subcategory_id = $(this).data('subcategory_id');
+    let condition_status = $(this).data('condition_status');
+    let office_id = $(this).data('office_id');
+    let quantity = $(this).data('quantity');
+    let status = $(this).data('status');
+
+   console.log(id);
+
+    // Set values in the modal form
+    $("#assets_id").val(id);
+    $("#update_assets_code").val(asset_code);
+    $("#update_assets_name").val(name);
+    $("#update_assets_description").val(description);
+    $("#update_assets_price").val(price);
+    
+    $("#update_assets_category").val(category_id);
+    $("#update_assets_subcategory").val(subcategory_id);
+    $("#update_assets_condition").val(condition_status);
+    $("#update_assets_Office").val(office_id);
+
+    $("#update_assets_qty").val(quantity);
+    $("#update_assets_status").val(status);
+
+    // Show the modal
+    $('#updateAssetsModal').fadeIn();
+});
+
+// Close modal functionality
+$('.updateUserModalClose').click(function () {
+    $('#updateAssetsModal').fadeOut();
+});
+
+
+
+
+  $('.addUserModalClose').click(function (e) { 
+    e.preventDefault();
+    $('#updateAssetsModal').fadeOut();
+  });  
+
+   // Close Modal when clicking outside the modal content
+   $("#updateAssetsModal").click(function(event) {
+        if ($(event.target).is("#updateAssetsModal")) {
+            $("#updateAssetsModal").fadeOut();
+        }
+    });
+
+
+
+
+$('#addAssetsButton').click(function (e) { 
+    e.preventDefault();
+    $('#addAssetsModal').fadeIn();
+  });  
+
+  $('.addUserModalClose').click(function (e) { 
+    e.preventDefault();
+    $('#addAssetsModal').fadeOut();
+  });  
+
+   // Close Modal when clicking outside the modal content
+   $("#addAssetsModal").click(function(event) {
+        if ($(event.target).is("#addAssetsModal")) {
+            $("#addAssetsModal").fadeOut();
+        }
+    });
+
+
+
+
+
+
+
 
 $('#CreateRequestButton').click(function (e) { 
     e.preventDefault();
@@ -57,7 +139,7 @@ $('#adduserButton').click(function (e) {
       var user_role =$(this).data('role');
       var user_designation =$(this).data('designation');
   
-      console.log(user_role);
+   
   
       $('#update_id').val(id)
       $('#update_user_fullname').val(user_fullname)
@@ -165,9 +247,84 @@ $("#createRequestFrm").submit(function (e) {
 
 
 
+    $("#addAssetFrm").submit(function (e) {
+        e.preventDefault();
+  
+      
+        $('.spinner').show();
+        $('#btnAddAssets').prop('disabled', true);
+    
+        var formData = new FormData(this); 
+        formData.append('requestType', 'AddAssets');
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json", // Expect JSON response
+            beforeSend: function () {
+                $("#submitBtn").prop("disabled", true).text("Processing...");
+            },
+            success: function (response) {
+                console.log(response); // Debugging
+                
+                if (response.status === 200) {
+                    alertify.success(response.message);
+                    setTimeout(function () { location.reload(); }, 1000);
+                } else {
+                    $('.spinner').hide();
+                    $('#btnAddAssets').prop('disabled', false);
+                    alertify.error(response.message);
+                }
+            },
+            complete: function () {
+                $("#submitBtn").prop("disabled", false).text("Submit");
+            }
+        });
+    });
 
 
 
+
+
+
+    $("#updateAssetFrm").submit(function (e) {
+        e.preventDefault();
+  
+      
+        $('.spinner').show();
+        $('#btnUpdateAssets').prop('disabled', true);
+    
+        var formData = new FormData(this); 
+        formData.append('requestType', 'UpdateAssets');
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json", // Expect JSON response
+            beforeSend: function () {
+                $("#btnUpdateAssets").prop("disabled", true).text("Processing...");
+            },
+            success: function (response) {
+                console.log(response); // Debugging
+                
+                if (response.status === 200) {
+                    alertify.success(response.message);
+                    setTimeout(function () { location.reload(); }, 1000);
+                } else {
+                    $('.spinner').hide();
+                    $('#btnUpdateAssets').prop('disabled', false);
+                    alertify.error(response.message);
+                }
+            },
+            complete: function () {
+                $("#btnUpdateAssets").prop("disabled", false).text("Submit");
+            }
+        });
+    });
 
 
 
@@ -222,6 +379,56 @@ $("#createRequestFrm").submit(function (e) {
 
 
 
+
+
+  $(document).on('click', '.togglerDeleteAssets', function(e) {
+    e.preventDefault();
+    var assets_id = $(this).data('id');
+
+    console.log(assets_id);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Delete This Record',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { assets_id: assets_id, requestType: 'DeleteAssets' },
+                dataType: 'json',  // Expect a JSON response
+                success: function(response) {
+                    if (response.status === 200) {
+                        Swal.fire(
+                            'Deleted!',
+                            response.message,  // Show the success message from the response
+                            'success'
+                        ).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            response.message,  // Show the error message from the response
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem with the request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
 
 
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 09:40 AM
+-- Generation Time: Mar 21, 2025 at 11:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `pam`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request`
+--
+
+CREATE TABLE `request` (
+  `request_id` int(11) NOT NULL,
+  `request_user_id` int(11) NOT NULL,
+  `request_cat_item` varchar(60) NOT NULL,
+  `request_material` varchar(60) NOT NULL,
+  `request_supplier_name` varchar(60) NOT NULL,
+  `request_supplier_company` varchar(60) NOT NULL,
+  `request_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `request_status` varchar(60) NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `request`
+--
+
+INSERT INTO `request` (`request_id`, `request_user_id`, `request_cat_item`, `request_material`, `request_supplier_name`, `request_supplier_company`, `request_date`, `request_status`) VALUES
+(1, 1, 'paperproducts', 'Composition', 'j supply', 'j company', '2025-03-21 10:26:12', 'Decline');
 
 -- --------------------------------------------------------
 
@@ -55,6 +79,12 @@ INSERT INTO `users` (`id`, `generated_id`, `email`, `password`, `fullname`, `nic
 --
 
 --
+-- Indexes for table `request`
+--
+ALTER TABLE `request`
+  ADD PRIMARY KEY (`request_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -63,6 +93,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `request`
+--
+ALTER TABLE `request`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`

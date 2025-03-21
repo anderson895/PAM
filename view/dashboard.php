@@ -1,8 +1,11 @@
-
-
-
 <?php include "components/header.php";?>
 
+
+<?php 
+ 
+if($_SESSION['role']=="Administrator"){
+        
+?>
 <!-- Top bar with user profile -->
 <div class="flex justify-between items-center bg-white p-4 mb-6 rounded-md shadow-md">
     <h2 class="text-lg font-semibold text-gray-700">Dashboard</h2>
@@ -65,7 +68,13 @@
 
 
 </div>
+<?php }else{ ?>
 
+    <div class="w-full p-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-lg text-lg">
+        <p class="font-bold">You are not authorized here!</p>
 
+    </div>
+
+<?php }  ?>
 
 <?php include "components/footer.php";?>

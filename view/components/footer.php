@@ -26,10 +26,6 @@
 
  
 
-
-  $("#toggleProcurements").click(function(){
-      $("#procurementsDropdown").slideToggle(300);
-    });
   
   $("#toggleAssets").click(function(){
       $("#assetsDropdown").slideToggle(300);

@@ -5,7 +5,7 @@
 
 <!-- Top bar with user profile -->
 <div class="flex justify-between items-center bg-white p-4 mb-6 rounded-md shadow-md">
-    <h2 class="text-lg font-semibold text-gray-700">Home</h2>
+    <h2 class="text-lg font-semibold text-gray-700">Reports</h2>
     <div class="flex items-center space-x-3">
         <?php
         $userImage = !empty($On_Session[0]['profile_image']) ? $On_Session[0]['profile_image'] : null;

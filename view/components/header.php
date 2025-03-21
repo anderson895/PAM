@@ -9,16 +9,14 @@ if (isset($_SESSION['id'])) {
 
    
     $On_Session = $db->check_account($id);
-
-   
   
-    if (!empty($On_Session)) {
-        if($_SESSION['role']!="Administrator"){
-          header('location: ../home');
-        }
-    } else {
-       header('location: ../');
-    }
+    // if (!empty($On_Session)) {
+    //     if($_SESSION['role']!="Administrator"){
+    //       header('location: ../home');
+    //     }
+    // } else {
+    //    header('location: ../');
+    // }
 } else {
    header('location: ../');
 }
@@ -60,12 +58,19 @@ if (isset($_SESSION['id'])) {
   <aside id="sidebar" class="bg-gradient-to-br from-red-900 to-red-700 shadow-lg w-64 lg:w-1/5 xl:w-1/6 p-6 space-y-6 lg:static fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
 
 <!-- Hide Sidebar Button -->
-<div class="flex items-center space-x-4 p-4 bg-gradient-to-br from-red-900 to-red-700 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+<div class="flex items-center space-x-4 p-4 bg-gradient-to-br from-red-900 to-red-700 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 max-w-full">
   <img src="../assets/logo/logo.jpg" alt="Logo" class="w-20 h-20 rounded-full border-2 border-gray-300 shadow-sm transform transition-transform duration-300 hover:scale-105">
-  <h1 class="text-xl font-bold text-white tracking-tight text-left lg:text-left hover:text-yellow-300 transition-colors duration-300"><?=ucfirst($On_Session[0]['role'])?></h1>
+  <h1 class="text-xl font-bold text-white tracking-tight text-left truncate lg:text-left hover:text-yellow-300 transition-colors duration-300 max-w-[70%]">
+    <?= ucfirst($On_Session[0]['role']) ?>
+  </h1>
 </div>
 
+
 <nav class="space-y-4 text-left lg:text-left">
+   
+<?php if($_SESSION['role']=="Administrator"){ ?>
+
+
     <a href="dashboard" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">dashboard</span>
         <span>Dashboard</span>
@@ -75,31 +80,33 @@ if (isset($_SESSION['id'])) {
         <span class="material-icons">manage_accounts</span>
         <span>User Management</span>
     </a>
+<?php } ?>   
+
+    <a href="requestManagement" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+        <span class="material-icons">shopping_cart</span>
+        <span>Procurements</span>
+    </a>
+
+
+<?php if($_SESSION['role']=="Administrator"){ ?>
 
     <!-- DROPDOWN TOGGLE BUTTON -->
-    <button id="toggleProcurements" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+    <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <div class="flex items-center space-x-3">
-            <span class="material-icons">shopping_cart</span>
-            <span>Procurements</span>
+            <span class="material-icons">work</span>
+            <span>Assets Management</span>
         </div>
         <span class="material-icons">expand_more</span>
     </button>
 
-    <!-- DROPDOWN MENU -->
-  
-
-    <a href="supplyRequest" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
-        <span class="material-icons">work</span>
-        <span>Supply Request</span>
-    </a>
 
     <!-- DROPDOWN MENU -->
     <div id="assetsDropdown" class="ml-8 space-y-2 hidden">
-        <a href="branches/list" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Assets</a>
-        <a href="branches/add" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
+        <a href="manage_assets" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Assets</a>
+        <a href="inventory" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
     </div>
 
-    <a href="users" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+    <a href="maintinance" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">construction</span>
         <span>System Maintenance</span>
     </a>
@@ -108,6 +115,9 @@ if (isset($_SESSION['id'])) {
         <span class="material-icons">bar_chart</span>
         <span>Report Generation</span>
     </a>
+
+<?php } ?> 
+
 
     <a href="logout.php">
         <button type="submit" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-red-500 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">

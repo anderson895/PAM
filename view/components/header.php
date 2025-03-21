@@ -13,7 +13,7 @@ if (isset($_SESSION['id'])) {
    
   
     if (!empty($On_Session)) {
-        if($_SESSION['role']!="administrator"){
+        if($_SESSION['role']!="Administrator"){
           header('location: ../home');
         }
     } else {

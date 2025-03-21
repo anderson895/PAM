@@ -38,7 +38,7 @@
     <form id="frmLogin" class="space-y-4 sm:space-y-5">
       <div>
         <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
-        <input type="text" id="email" name="email" 
+        <input type="email" id="email" name="email" 
                class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
 

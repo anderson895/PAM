@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         // Determine the redirect path based on user_type
                         $redirectPath = '';
-                        if ($user['role'] === 'administrator') {
+                        if ($user['role'] === 'Administrator') {
                             $redirectPath = 'view/dashboard';
                         } else {
                             $redirectPath = 'view/home';
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } else {
                         echo json_encode([
                             'status' => 'error',
-                            'message' => 'Invalid username or password.'
+                            'message' => 'Invalid email or password.'
                         ]);
                     }
 

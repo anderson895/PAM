@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 05:53 AM
+-- Generation Time: Mar 21, 2025 at 09:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,10 +29,13 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `generated_id` int(11) NOT NULL,
   `email` varchar(60) NOT NULL,
   `password` varchar(255) NOT NULL,
   `fullname` varchar(60) NOT NULL,
+  `nickname` varchar(60) DEFAULT NULL,
   `role` varchar(60) NOT NULL,
+  `designation` varchar(60) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
   `employee_id_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -43,8 +46,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password`, `fullname`, `role`, `profile_picture`, `employee_id_picture`, `created_at`, `status`) VALUES
-(1, 'admin@gmail.com', '$2y$10$nSWRpQad6RO465khJCM2JucCApSwYYwn4iTIA8lI9BTCFRJIBudKm', 'Juan Dela Cruz', 'administrator', NULL, NULL, '2025-03-21 04:08:48', 1);
+INSERT INTO `users` (`id`, `generated_id`, `email`, `password`, `fullname`, `nickname`, `role`, `designation`, `profile_picture`, `employee_id_picture`, `created_at`, `status`) VALUES
+(1, 12312, 'admin@gmail.com', '$2y$10$kbDGD4CzxKZN5dRpp0eoV.azp7.yNniWsyPwb7jQ/QRoCeoZslw82', 'Juan Dela Cruz', 'admin', 'Administrator', 'Computer Lab', 'Profile_67dd240ef2143.jpeg', NULL, '2025-03-21 08:34:03', 1),
+(80134, 99477, 'andersonandy046@gmail.com', '$2y$10$DV242aq/jwR52Oq3EqepquWdcrpeEm77Lx/H2gPK7.fnCBnctmYM6', 'joshua padilla', 'andy', 'IACEPO', 'Computer Lab', 'Profile_67dd24b38b323.jpg', NULL, '2025-03-21 08:40:20', 0);
 
 --
 -- Indexes for dumped tables
@@ -64,7 +68,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80135;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -25,10 +25,17 @@
 
 
 
+<!-- Search Input with Icon -->
+<div class="relative mb-4 w-full max-w-md">
+    <span class="absolute inset-y-0 left-3 flex items-center text-gray-500">
+        <i class="material-icons text-lg">search</i>
+    </span>
+    <input type="text" id="searchInput" placeholder="Search users..." 
+        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition">
+</div>
 
 <!-- User Table Card -->
 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-
     <button id="adduserButton" class="bg-blue-500 text-white py-2 px-4 text-sm rounded-lg flex items-center hover:bg-blue-600 transition duration-300 mb-4">
         <span class="material-icons mr-2 text-base">person_add</span>
         Add New
@@ -48,14 +55,13 @@
                     <th class="p-3">Created At</th>
                     <th class="p-3">Office Designation</th>
                     
-                    <?php  if($On_Session[0]['role']=="Administrator"){
+                    <?php if ($On_Session[0]['role'] == "Administrator") {
                         echo '<th class="p-3">Action</th>';
-                    }?>
-                    
+                    } ?>
                 </tr>
             </thead>
             <tbody>
-                <?php include "backend/end-points/user_list.php"; ?>
+            <?php include "backend/end-points/user_list.php"; ?>
             </tbody>
         </table>
     </div>
@@ -214,6 +220,19 @@
 </div>
 
 
+
+
+
+<script>
+$(document).ready(function () {
+    $("#searchInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#userTable tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
+</script>
 
 
 <?php include "components/footer.php";?>

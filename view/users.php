@@ -123,7 +123,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="update_user_password" class="block text-sm font-medium text-gray-700">Password</label>
+                <label for="update_user_password" class="block text-sm font-medium text-gray-700">New Password</label>
                 <input type="password" id="update_user_password" name="user_password" class="w-full p-2 border rounded-md" required>
             </div>
 

@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <input hidden type="text" id="update_id">
+            <input hidden type="text" id="update_id" name="update_id">
             <div class="mb-4">
                 <label for="update_user_fullname" class="block text-sm font-medium text-gray-700">Fullname</label>
                 <input type="text" id="update_user_fullname" name="user_fullname" class="w-full p-2 border rounded-md" required>
@@ -124,7 +124,7 @@
 
             <div class="mb-4">
                 <label for="update_user_password" class="block text-sm font-medium text-gray-700">New Password</label>
-                <input type="password" id="update_user_password" name="user_password" class="w-full p-2 border rounded-md" required>
+                <input type="password" id="update_user_password" name="user_password" class="w-full p-2 border rounded-md">
             </div>
 
             <div class="flex justify-end gap-2">
@@ -168,10 +168,10 @@
             <div class="mb-4">
                 <label for="add_user_type" class="block text-sm font-medium text-gray-700">User Type</label>
                 <select name="user_type" id="add_user_type" class="w-full p-2 border rounded-md" required>
-                    <option value="administrator">Administrator</option>
-                    <option value="registrar">Registrar</option>
-                    <option value="finance">Finance</option>
-                    <option value="iacepo">IACEPO</option>
+                    <option value="Administrator">Administrator</option>
+                    <option value="Registrar">Registrar</option>
+                    <option value="Finance">Finance</option>
+                    <option value="IACEPO">IACEPO</option>
                 </select>
             </div>
 

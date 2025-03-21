@@ -22,7 +22,7 @@ $('#adduserButton').click(function (e) {
 
 
 
-    $('.togglerUpdateUserAdmin').click(function (e) { 
+    $('.togglerUpdateUser').click(function (e) { 
       var id =$(this).data('id');
       var user_fullname =$(this).data('fullname');
       var user_nickname =$(this).data('nickname');
@@ -81,7 +81,7 @@ $('#adduserButton').click(function (e) {
         
         $.ajax({
             type: "POST",
-            url: "api/config/end-points/controller.php",
+            url: "backend/end-points/controller.php",
             data: formData,
             processData: false,
             contentType: false,
@@ -91,12 +91,10 @@ $('#adduserButton').click(function (e) {
                 $('.spinner').hide();
                 $('#btnUpdateUser').prop('disabled', false);
     
-                if (response.status == "success") {
-                    alertify.success('Pet Registered Successfully');
+                if (response.status == 200) {
+                    alertify.success('Update Successful');
                     setTimeout(function () {
-                        window.location.href = 'index.php?page=MyPets';
-
-
+                        location.reload();
                     }, 2000);
                 } else {
                     alertify.error('Sending failed, please try again.');
@@ -161,3 +159,61 @@ $('#adduserButton').click(function (e) {
           }
       });
   });
+
+
+
+
+
+
+
+
+
+
+  $(document).on('click', '.togglerDeleteUser', function(e) {
+    e.preventDefault();
+    var userId = $(this).data('id');
+
+    console.log(userId);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { userId: userId, requestType: 'DeleteUser' },
+                dataType: 'json',  // Expect a JSON response
+                success: function(response) {
+                    if (response.status === 200) {
+                        Swal.fire(
+                            'Deleted!',
+                            response.message,  // Show the success message from the response
+                            'success'
+                        ).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            response.message,  // Show the error message from the response
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem with the request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});

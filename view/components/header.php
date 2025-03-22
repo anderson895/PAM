@@ -4,11 +4,17 @@ include('backend/class.php');
 
 $db = new global_class();
 
+$maintenance = $db->fetch_maintenance();
+
 if (isset($_SESSION['id'])) {
     $id = intval($_SESSION['id']);
 
    
     $On_Session = $db->check_account($id);
+
+    // echo "<pre>";
+    // print_r($On_Session);
+    // echo "</pre>";
   
     // if (!empty($On_Session)) {
     //     if($_SESSION['role']!="Administrator"){
@@ -30,8 +36,8 @@ if (isset($_SESSION['id'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PAM</title>
-  <link rel="icon" type="image/png" href="../assets/logo/logo.jpg">
+  <title><?=$maintenance['system_name']?></title>
+  <link rel="icon" type="image/png" href="../assets/logo/<?=$maintenance['system_image']?>">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -59,7 +65,7 @@ if (isset($_SESSION['id'])) {
 
 <!-- Hide Sidebar Button -->
 <div class="flex items-center space-x-4 p-4 bg-gradient-to-br from-red-900 to-red-700 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 max-w-full">
-  <img src="../assets/logo/logo.jpg" alt="Logo" class="w-20 h-20 rounded-full border-2 border-gray-300 shadow-sm transform transition-transform duration-300 hover:scale-105">
+  <img src="../assets/logo/<?=$maintenance['system_image']?>" alt="Logo" class="w-20 h-20 rounded-full border-2 border-gray-300 shadow-sm transform transition-transform duration-300 hover:scale-105">
   <h1 class="text-xl font-bold text-white tracking-tight text-left truncate lg:text-left hover:text-yellow-300 transition-colors duration-300 max-w-[70%]">
     <?= ucfirst($On_Session[0]['role']) ?>
   </h1>
@@ -90,7 +96,7 @@ if (isset($_SESSION['id'])) {
 
 <?php if($_SESSION['role']=="Administrator"){ ?>
 
-    <!-- DROPDOWN TOGGLE BUTTON -->
+    <!--START DROP DOWN MENU -->
     <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <div class="flex items-center space-x-3">
             <span class="material-icons">work</span>
@@ -98,9 +104,6 @@ if (isset($_SESSION['id'])) {
         </div>
         <span class="material-icons">expand_more</span>
     </button>
-
-
-    <!-- DROPDOWN MENU -->
     <div id="assetsDropdown" class="ml-8 space-y-2 hidden">
         <a href="manage_assets" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Assets</a>
         <a href="inventory" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
@@ -110,8 +113,14 @@ if (isset($_SESSION['id'])) {
         <span class="material-icons">construction</span>
         <span>System Maintenance</span>
     </a>
+    <!--END DROP DOWN MENU -->
+    <!-- <a href="manage_assets" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+        <span class="material-icons">work</span>
+        <span>Assets</span>
+    </a> -->
 
-    <a href="users" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+
+    <a href="reports" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">bar_chart</span>
         <span>Report Generation</span>
     </a>

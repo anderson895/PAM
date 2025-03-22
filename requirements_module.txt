@@ -1,3 +1,7 @@
+Procurement & Assets Management System
+
+
+
 1. Login
 *Centralize Login for admin,registrar,finance,IACEPO
     -admin (All module)
@@ -23,6 +27,8 @@
     date 
     supplier name 
     supplier company
+    
+    actions status(approve, ongoing, delivered)
 
 
 *Process Oder - 

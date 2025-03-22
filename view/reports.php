@@ -1,7 +1,4 @@
-
-
-
-<?php include "components/header.php";?>
+<?php include "components/header.php"; ?>
 
 <!-- Top bar with user profile -->
 <div class="flex justify-between items-center bg-white p-4 mb-6 rounded-md shadow-md">
@@ -23,17 +20,68 @@
     </div>
 </div>
 
+<div class="flex justify-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Inventory Report</h3>
+            <p class="text-gray-600 mb-4">Summary of student performance.</p>
+            <button class="print-report-inv bg-red-500 text-white px-4 py-2 rounded-md mt-2">
+                Print Report
+            </button>
+        </div>
 
-
-
-
-
-
-
-
-
+        <!-- Card 2 (Procurements Report) -->
+        <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-lg font-semibold mb-4">Procurements Report</h3>
+            <p class="text-gray-600 mb-4">Detailed procurement overview.</p>
+            <button class="print-report-procurements bg-red-500 text-white px-4 py-2 rounded-md mt-2">
+                Print Report
+            </button>
+        </div>
+    </div>
 </div>
 
+<!-- Print Modal -->
+<div id="printSection" class="hidden"></div>
 
+<script>
+    $(document).ready(function () {
+        // Print Inventory Report
+        $(".print-report-inv").click(function () {
+            $.ajax({
+                url: "backend/end-points/print_inventory_report.php", 
+                type: "GET",
+                success: function (data) {
+                    var printWindow = window.open('', '', 'width=900,height=700');
+                    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">'); // Load Tailwind
+                    printWindow.document.write(data);
+                    printWindow.document.close();
+                    printWindow.print();
+                },
+                error: function () {
+                    alert("Failed to fetch the inventory report.");
+                }
+            });
+        });
 
-<?php include "components/footer.php";?>
+        // Print Procurements Report
+        $(".print-report-procurements").click(function () {
+            $.ajax({
+                url: "backend/end-points/print_procurement_report.php", 
+                type: "GET",
+                success: function (data) {
+                    var printWindow = window.open('', '', 'width=900,height=700');
+                    printWindow.document.write(data);
+                    printWindow.document.close();
+                    printWindow.print();
+                },
+                error: function () {
+                    alert("Failed to fetch the procurement report.");
+                }
+            });
+        });
+    });
+</script>
+
+<?php include "components/footer.php"; ?>

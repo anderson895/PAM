@@ -1,6 +1,3 @@
-
-
-
 <?php include "components/header.php";?>
 
 <!-- Top bar with user profile -->
@@ -23,17 +20,31 @@
     </div>
 </div>
 
+<!-- Form for logo, system name, and color theme -->
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-md shadow-md">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-6">System Settings</h2>
+    <form id="frmMaintenance">
+        <!-- Logo Upload -->
+        <div class="mb-6">
+            <label for="logo" class="block text-sm font-medium text-gray-700">Logo</label>
+            <input type="file" id="logo" name="system_logo" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm" />
+        </div>
 
+        <!-- System Name -->
+        <div class="mb-6">
+            <label for="system_name" class="block text-sm font-medium text-gray-700">System Name</label>
+            <input type="text" id="system_name" name="system_name" value="<?=$maintenance['system_name']?>" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm" placeholder="Enter system name" />
+        </div>
 
+        
 
-
-
-
-
-
-
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button type="submit" id="BtnMaintenance" class="inline-flex items-center px-6 py-2 bg-red-600 text-white font-semibold rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                Save Changes
+            </button>
+        </div>
+    </form>
 </div>
-
-
 
 <?php include "components/footer.php";?>

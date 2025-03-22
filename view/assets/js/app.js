@@ -199,11 +199,56 @@ $("#createRequestFrm").submit(function (e) {
                         location.reload();
                     }, 1000);
                 } else {
+                    alertify.error(response.message);
+                }
+            }
+        });
+    });
+
+
+
+
+
+
+
+    $("#frmMaintenance").submit(function (e) {
+        e.preventDefault();
+    
+        $('.spinner').show();
+        $('#BtnMaintenance').prop('disabled', true);
+    
+        var formData = new FormData(this);
+        formData.append('requestType', 'UpdateMaintenance');
+        
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                console.log(response);
+                $('.spinner').hide();
+                $('#BtnMaintenance').prop('disabled', false);
+    
+                if (response.status == 200) {
+                    alertify.success('Update Successful');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                } else {
                     alertify.error('Sending failed, please try again.');
                 }
             }
         });
     });
+
+
+
+
+
+
 
 
 
@@ -486,14 +531,24 @@ $("#createRequestFrm").submit(function (e) {
 
 
 
-$(document).on('click', '.togglerRequest', function(e) {
+
+$(document).on('change', '.togglerRequest', function(e) {
     e.preventDefault();
     
     var request_id = $(this).data('request_id');
-    var action = $(this).data('action'); // Get action type (Approve/Decline)
-    var confirmText = action === 'ApproveUser' ? 'Approve this request?' : 'Decline this request?';
-    var successMessage = action === 'ApproveUser' ? 'Request Approved!' : 'Request Declined!';
+    var action = $(this).val(); // Get action type (Approve/Decline)
     
+    // Modify your confirmation text and success message based on the selected action
+    var confirmText = action === 'Approve' ? 'Approve this request?' :
+                      action === 'Decline' ? 'Decline this request?' :
+                      action === 'Ongoing' ? 'Mark this request as ongoing?' :
+                      action === 'Recieved' ? 'Mark this request as received?' : '';
+
+    var successMessage = action === 'Approve' ? 'Request Approved!' :
+                         action === 'Decline' ? 'Request Declined!' :
+                         action === 'Ongoing' ? 'Request is now ongoing!' :
+                         action === 'Recieved' ? 'Request marked as received!' : '';
+
     Swal.fire({
         title: 'Are you sure?',
         text: confirmText,
@@ -506,7 +561,7 @@ $(document).on('click', '.togglerRequest', function(e) {
             $.ajax({
                 url: "backend/end-points/controller.php",
                 type: 'POST',
-                data: { request_id: request_id, requestType: action },
+                data: { request_id: request_id, action: action,requestType:'UpdateReqStatus'},
                 dataType: 'json',
                 success: function(response) {
                     if (response.status === 200) {

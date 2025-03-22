@@ -13,6 +13,22 @@ class global_class extends db_connect
     }
 
 
+    public function fetch_maintenance() {
+        $query = $this->conn->prepare("SELECT * FROM `system_maintenance` LIMIT 1");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            // Fetch a single row as an associative array
+            $data = $result->fetch_assoc();
+            
+            // Return the single record
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+
     public function Login($email, $password)
     {
         $query = $this->conn->prepare("SELECT * FROM `users` WHERE `email` = ? AND `status` = '1'");

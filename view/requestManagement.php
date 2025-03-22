@@ -51,6 +51,7 @@
                     <th class="p-3">Employee ID</th>
                     <th class="p-3">Office Designation</th>
                     <th class="p-3">Item</th>
+                    <th class="p-3">Qty</th>
                     <th class="p-3">Date</th>
                     <th class="p-3">Supplier Name</th>
                     <th class="p-3">Supplier Company</th>
@@ -105,37 +106,65 @@
                 <input readonly type="text" id="add_user_designation" name="user_designation" class="w-full p-2 border rounded-md" required>
             </div>
 
-            <div class="mb-4">
-                <label for="add_cat_item" class="block text-sm font-medium text-gray-700">Category Item</label>
-                <select name="cat_item" id="add_cat_item" class="w-full p-2 border rounded-md" required>
-                    <option value="" disabled="" selected="">Select Item</option>
-                    <option value="writingtools">Writing Tools</option>
-                    <option value="paperproducts">Paper Products</option>
-                    <option value="organizationtools">Organization Tools</option>
-                    <option value="storagecontainer">Storage Containers</option>
-                    <option value="cutting&amp;gluingtools">Cutting &amp; Gluing Tools</option>
-                    <option value="technologysupplies">Technology Supplies</option>
-                    <option value="office/schoolequipment">Office/School Equipment</option>
-                    <option value="miscellaneoussupplies">Miscellaneous Supplies</option>
-                    <option value="health&amp;safety">Health &amp; Safety</option>
-                </select>
-            </div>
-
 
             <div class="mb-4">
-                <label for="add_material" class="block text-sm font-medium text-gray-700">Material</label>
-                <select name="material" id="add_material" class="w-full p-2 border rounded-md" required>
-                    <option value="Registrar's Office">Auto Selected Based on selected  category</option>
-                </select>
-            </div>
+    <label for="add_cat_assets_id" class="block text-sm font-medium text-gray-700">Assets</label>
+    <select name="cat_assets_id" id="add_cat_assets_id" class="w-full p-2 border rounded-md" required>
+        <option value="">Select Item</option>
+        <?php 
+        $fetch_all_assets = $db->fetch_all_assets();
+        if ($fetch_all_assets->num_rows > 0): 
+            while ($assets = $fetch_all_assets->fetch_assoc()): 
+            ?>
+                <option data-category_id="<?=$assets['category_id']?>" data-subcategory_id="<?=$assets['subcategory_id']?>" value="<?=$assets['id']?>">
+                    <?=$assets['name']?>
+                </option>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <option value="">No record found.</option>
+        <?php endif; ?>
+    </select>
+</div>
 
-            <div class="mb-4">
-                <label for="add_material" class="block text-sm font-medium text-gray-700">Variety</label>
-                <select name="material" id="add_variety" class="w-full p-2 border rounded-md" required>
-                    <option value="Registrar's Office">Auto Selected Based on selected  material</option>
-                </select>
-            </div>
+<div class="mb-4">
+    <label for="add_category_item" class="block text-sm font-medium text-gray-700">Category Item</label>
+    <select name="category_item" id="add_category_item" class="w-full p-2 border rounded-md bg-gray-100" disabled required>
+        <option value="">Select Category</option>
+        <?php 
+        $fetch_all_category = $db->fetch_all_category();
+        if ($fetch_all_category->num_rows > 0): 
+            while ($category = $fetch_all_category->fetch_assoc()): 
+            ?>
+                <option value="<?=$category['id']?>"><?=$category['category_name']?></option>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <option value="">No record found.</option>
+        <?php endif; ?>
+    </select>
+</div>
 
+<div class="mb-4">
+    <label for="add_assets_subcategory" class="block text-sm font-medium text-gray-700">Subcategory</label>
+    <select name="assets_subcategory" id="add_assets_subcategory" class="w-full p-2 border rounded-md bg-gray-100" disabled required>
+        <option value="">Select Subcategory</option>
+        <?php 
+        $fetch_all_subcategory = $db->fetch_all_subcategory();
+        if ($fetch_all_subcategory->num_rows > 0): 
+            while ($subcategory = $fetch_all_subcategory->fetch_assoc()): 
+            ?>
+                <option data-category_id="<?=$subcategory['category_id']?>" value="<?=$subcategory['id']?>"><?=$subcategory['subcategory_name']?></option>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <option value="">No record found.</option>
+        <?php endif; ?>
+    </select>
+</div>
+
+
+        <div class="mb-4">
+                <label for="add_assets_quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                <input type="number" id="add_assets_quantity" name="assets_quantity" class="w-full p-2 border rounded-md" required>
+            </div>
 
 
             <div class="mb-4">
@@ -162,6 +191,57 @@
 
 
 <script>
+
+
+
+
+$(document).ready(function () {
+   // Trigger change event when asset is selected
+   $("#add_cat_assets_id").change(function () {
+        // Get selected option's data attributes
+        var selectedCategoryId = $(this).find("option:selected").data("category_id");
+        var selectedSubcategoryId = $(this).find("option:selected").data("subcategory_id");
+
+        // Set the category and subcategory based on selected asset
+        $("#add_category_item").val(selectedCategoryId).prop("disabled", true);
+        $("#add_assets_subcategory").val(selectedSubcategoryId).prop("disabled", true);
+
+        // Show matching subcategories when asset is selected
+        $("#add_assets_subcategory option").each(function () {
+            if ($(this).data("category_id") == selectedCategoryId) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    // Prevent manual change to category and subcategory
+    $("#add_category_item, #add_assets_subcategory").prop("disabled", true);
+
+    // Trigger category change to filter subcategories dynamically
+    $("#add_category_item").change(function () {
+        var selectedCategoryId = $(this).val();
+
+        // Reset and filter subcategories based on category selection
+        $("#add_assets_subcategory option").each(function () {
+            if ($(this).data("category_id") == selectedCategoryId || $(this).val() == "") {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        // Reset subcategory selection when category changes
+        $("#add_assets_subcategory").val("");
+    });
+});
+
+
+
+
+
+
 
 $(document).ready(function () {
     function fetchSuggestions(query) {
@@ -243,4 +323,7 @@ $(document).click(function(e) {
 
 
 <?php include "components/footer.php";?>
-<script src="assets/js/category_generated.js"></script>
+
+
+
+<!-- <script src="assets/js/category_generated.js"></script> -->

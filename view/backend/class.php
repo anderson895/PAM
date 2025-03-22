@@ -23,24 +23,91 @@ class global_class extends db_connect
             return 'Error: ' . $query->error;
         }
     }
+
+
+
+
+
     public function UpdateAssets($assets_id, $assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price, $assets_qty) {
-        $query = $this->conn->prepare(
-            "UPDATE `assets` 
-             SET `asset_code` = ?, `name` = ?, `category_id` = ?, `subcategory_id` = ?, `office_id` = ?, 
-                 `price` = ?, `condition_status` = ?, `status` = ?, `image` = ?, `quantity` = ?, `description` = ?
-             WHERE `id` = ?"
-        );
+        // Start base query
+        $sql = "UPDATE `assets` 
+                SET `asset_code` = ?, `name` = ?, `category_id` = ?, `subcategory_id` = ?, `office_id` = ?, 
+                    `price` = ?, `condition_status` = ?, `status` = ?, `quantity` = ?, `description` = ?";
+    
+        // Check if image is not empty, include in the query
+        $params = [$assets_code, $assets_name, $assets_category, $assets_subcategory, $assets_Office, 
+                   $assets_price, $assets_condition, $assets_status, $assets_qty, $assets_description];
         
-        $query->bind_param("sssssssssssi", $assets_code, $assets_name, $assets_category, $assets_subcategory, $assets_Office, 
-                                        $assets_price, $assets_condition, $assets_status, $assets_imageName, $assets_qty, 
-                                        $assets_description, $assets_id);
+        $types = "ssssssssss";
+    
+        if (!empty($assets_imageName)) {
+            $sql .= ", `image` = ?";
+            $params[] = $assets_imageName;
+            $types .= "s";
+        }
+    
+        // Add WHERE clause
+        $sql .= " WHERE `id` = ?";
+        $params[] = $assets_id;
+        $types .= "i";
+    
+        // Prepare the query
+        $query = $this->conn->prepare($sql);
         
+        // Bind parameters dynamically
+        $query->bind_param($types, ...$params);
+    
         if ($query->execute()) {
             return 'success';
         } else {
             return 'Error: ' . $query->error;
         }
     }
+
+
+   public function UpdateMaintenance($system_logoName,$system_name) {
+    // Start base query
+    $sql = "UPDATE `system_maintenance` 
+            SET `system_name` = ?";
+    $params = [$system_name];
+    
+    $types = "s";
+
+    if (!empty($system_logoName)) {
+        $sql .= ", `system_image` = ?";
+        $params[] = $system_logoName;
+        $types .= "s";
+    }
+    $sql .= " WHERE `system_id` = ?";
+    $params[] = 1;
+    $types .= "i";
+    $query = $this->conn->prepare($sql);
+    $query->bind_param($types, ...$params);
+
+    if ($query->execute()) {
+        return 'success';
+    } else {
+        return 'Error: ' . $query->error;
+    }
+}
+
+
+    public function fetch_maintenance() {
+        $query = $this->conn->prepare("SELECT * FROM `system_maintenance` LIMIT 1");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            // Fetch a single row as an associative array
+            $data = $result->fetch_assoc();
+            
+            // Return the single record
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+
     
     
     public function fetch_all_office(){
@@ -67,6 +134,166 @@ class global_class extends db_connect
         }
     }
 
+
+    public function fetch_all_request() {
+        $query = $this->conn->prepare("
+            SELECT 
+                request.request_id,
+                request.request_user_id,
+                request.request_assets_id,
+                request.request_qty,
+                request.request_date,
+                request.request_status,
+                request.request_supplier_name,
+                request.request_supplier_company,
+              
+                
+                -- User Fields
+                users.id AS user_id,
+                users.fullname AS user_fullname,
+                users.email AS user_email,
+                users.generated_id,
+                users.designation as user_designation,
+                
+                -- Asset Fields
+                assets.id AS asset_id,
+                assets.asset_code AS asset_code,
+                assets.name AS asset_name,
+                assets.category_id AS asset_category,
+                assets.subcategory_id AS asset_subcategory,
+                assets.price AS asset_price,
+                assets.condition_status AS asset_condition,
+                assets.status AS asset_status
+                
+            FROM `request`
+            LEFT JOIN users ON users.id = request.request_user_id
+            LEFT JOIN assets ON assets.id = request.request_assets_id
+            ORDER BY request.request_id DESC
+        ");
+    
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+    public function UpdateReqStatus($request_id, $action) {
+        // Fetch the asset and request details
+        $query = $this->conn->prepare("
+            SELECT request.request_qty, assets.id as asset_id, assets.quantity 
+            FROM `request` 
+            LEFT JOIN assets ON assets.id = request.request_assets_id 
+            WHERE request.request_id = ?
+        ");
+        $query->bind_param("s", $request_id);
+    
+        if ($query->execute()) {
+            $result = $query->get_result();
+    
+            // Check if we got a result for the request
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $request_qty = $row['request_qty'];
+                $asset_id = $row['asset_id'];
+                $current_quantity = $row['quantity'];
+    
+                // Check if the requested quantity is greater than the available quantity
+                if ($request_qty > $current_quantity) {
+                    return 'Requested quantity is not enough for the current stocks. Available stock: ' . $current_quantity;
+                }
+    
+                // Check if action is "Delivered"
+                if ($action === 'Delivered') {
+                    // Deduct the requested quantity from the asset quantity
+                    $new_quantity = $current_quantity - $request_qty;
+    
+                    // Check if asset is out of stock
+                    if ($new_quantity < 0) {
+                        $new_quantity = 0; // Set quantity to zero if it's less than 0
+                    }
+    
+                    // Update asset quantity in the database
+                    $updateAssetQuery = $this->conn->prepare("
+                        UPDATE assets SET quantity = ? WHERE id = ?
+                    ");
+                    $updateAssetQuery->bind_param("ii", $new_quantity, $asset_id);
+                    $updateAssetQuery->execute();
+                }
+    
+                // Update the request status
+                $updateStatusQuery = $this->conn->prepare(
+                    "UPDATE `request` SET `request_status` = ? WHERE `request_id` = ?"
+                );
+                $updateStatusQuery->bind_param("ss", $action, $request_id);
+    
+                if ($updateStatusQuery->execute()) {
+                    return 'success';
+                } else {
+                    return 'Error: ' . $updateStatusQuery->error;
+                }
+            } else {
+                return 'Error: Request not found';
+            }
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+    
+    
+    
+    
+
+
+
+        // ✅ Add validation before inserting request
+    public function CreateRequest($add_user_id, $cat_assets_id, $assets_quantity, $supplier_name, $supplier_company){
+        // 1️⃣ Check available quantity in `assets` table
+        $check_query = $this->conn->prepare("
+            SELECT `quantity` FROM `assets` WHERE `id` = ?
+        ");
+        $check_query->bind_param("i", $cat_assets_id);
+        $check_query->execute();
+        $result = $check_query->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $available_quantity = $row['quantity'];
+
+            // 2️⃣ Validate if requested quantity is available
+            if ($assets_quantity <= $available_quantity) {
+                // 3️⃣ Insert request if quantity is sufficient
+                $query = $this->conn->prepare("
+                    INSERT INTO `request` 
+                    (`request_user_id`, `request_assets_id`, `request_qty`, `request_supplier_name`, `request_supplier_company`)
+                    VALUES (?,?,?,?,?)
+                ");
+                $query->bind_param("iiiss", $add_user_id, $cat_assets_id, $assets_quantity, $supplier_name, $supplier_company);
+
+                if ($query->execute()) {
+                    // // 4️⃣ Optional: Deduct the quantity from assets after request
+                    // $update_query = $this->conn->prepare("
+                    //     UPDATE `assets` SET `quantity` = `quantity` - ? WHERE `id` = ?
+                    // ");
+                    // $update_query->bind_param("ii", $assets_quantity, $cat_assets_id);
+                    // $update_query->execute();
+
+                    return 'success';
+                } else {
+                    return 'Error: ' . $query->error;
+                }
+            } else {
+                // 5️⃣ Return error if quantity is insufficient
+                return 'Requested quantity exceeds available stock. Available: ' . $available_quantity;
+            }
+        } else {
+            return 'Error: Asset not found!';
+        }
+    }
+
+
+
+
     public function fetch_all_subcategory(){
         $query = $this->conn->prepare("SELECT * FROM `subcategories`");
 
@@ -75,6 +302,10 @@ class global_class extends db_connect
             return $result;
         }
     }
+
+
+
+    
 
 
     public function fetch_all_category(){
@@ -96,18 +327,8 @@ class global_class extends db_connect
     }
 
 
-    public function fetch_all_request(){
-        $query = $this->conn->prepare("SELECT * FROM `request`
-        LEFT JOIN users ON users.id = request.request_user_id
-        ORDER BY `request_id` DESC
-        ");
-
-        if ($query->execute()) {
-            $result = $query->get_result();
-            return $result;
-        }
-    }
-
+    
+    
 
 
 
@@ -143,18 +364,7 @@ class global_class extends db_connect
     
 
 
-    public function CreateRequest($add_user_id, $cat_item, $material,$supplier_name,$supplier_company) {
-        $query = $this->conn->prepare(
-            "INSERT INTO `request` (`request_user_id`, `request_cat_item`, `request_material`,`request_supplier_name`, `request_supplier_company`) VALUES (?,?,?,?,?)"
-        );
-        $query->bind_param("issss", $add_user_id, $cat_item, $material,$supplier_name, $supplier_company);
-    
-        if ($query->execute()) {
-            return 'success';
-        } else {
-            return 'Error: ' . $query->error;
-        }
-    }
+  
     
 
    
@@ -198,37 +408,7 @@ class global_class extends db_connect
 
 
 
-    public function ApproveUser($request_id){
-        $status = "Approve"; 
-        
-        $query = $this->conn->prepare(
-            "UPDATE `request` SET `request_status` = ? WHERE `request_id` = ?"
-        );
-        $query->bind_param("ss", $status, $request_id);
-        
-        if ($query->execute()) {
-            return 'success';
-        } else {
-            return 'Error: ' . $query->error;
-        }
-    }
-
-
-
-    public function DeclineUser($request_id){
-        $status = "Decline"; 
-        
-        $query = $this->conn->prepare(
-            "UPDATE `request` SET `request_status` = ? WHERE `request_id` = ?"
-        );
-        $query->bind_param("ss", $status, $request_id);
-        
-        if ($query->execute()) {
-            return 'success';
-        } else {
-            return 'Error: ' . $query->error;
-        }
-    }
+    
 
 
 

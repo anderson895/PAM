@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function handleFileUpload($file, $uploadDir, $prefix) {
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
             $maxFileSize = 10 * 1024 * 1024; // 10MB
 
             if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function handleFileUpload($file, $uploadDir, $prefix) {
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
             $maxFileSize = 10 * 1024 * 1024; // 10MB
 
             if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -157,27 +157,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
-    }else if($_POST['requestType'] =='ApproveUser'){
+    }else if($_POST['requestType'] =='UpdateReqStatus'){
 
 
         $request_id = $_POST['request_id'];
+        $action = $_POST['action'];
 
-        $result = $db->ApproveUser($request_id);
-
-        if ($result == "success") {
-            echo json_encode(["status" => 200, "message" => "Approved Successful"]);
-        } else {
-            echo json_encode(["status" => 400, "message" => $result]);
-        }
-    }else if($_POST['requestType'] =='DeclineUser'){
-
-
-        $request_id = $_POST['request_id'];
-
-        $result = $db->DeclineUser($request_id);
+        $result = $db->UpdateReqStatus($request_id,$action);
 
         if ($result == "success") {
-            echo json_encode(["status" => 200, "message" => "Request Declined"]);
+            echo json_encode(["status" => 200, "message" => "$action Successful"]);
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
@@ -187,12 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $add_user_id = htmlspecialchars(trim($_POST['add_user_id']));
         $user_fullname = htmlspecialchars(trim($_POST['user_fullname']));
         $user_designation = htmlspecialchars(trim($_POST['user_designation']));
-        $cat_item = htmlspecialchars(trim($_POST['cat_item']));
-        $material = htmlspecialchars(trim($_POST['material']));
+        $cat_assets_id = htmlspecialchars(trim($_POST['cat_assets_id']));
         $supplier_name = htmlspecialchars(trim($_POST['supplier_name']));
+        $assets_quantity = htmlspecialchars(trim($_POST['assets_quantity']));
         $supplier_company = htmlspecialchars(trim($_POST['supplier_company']));
 
-        $result = $db->CreateRequest($add_user_id, $cat_item, $material,$supplier_name,$supplier_company);
+        $result = $db->CreateRequest($add_user_id, $cat_assets_id,$assets_quantity,$supplier_name,$supplier_company);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "Successfully Added"]);
@@ -212,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function handleFileUpload($file, $uploadDir, $prefix) {
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
             $maxFileSize = 10 * 1024 * 1024; // 10MB
 
             if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -277,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         function handleFileUpload($file, $uploadDir, $prefix) {
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
             $maxFileSize = 10 * 1024 * 1024; // 10MB
 
             if ($file['error'] !== UPLOAD_ERR_OK) {
@@ -345,6 +334,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
+    }else if($_POST['requestType'] =='UpdateMaintenance'){
+
+        $uploadDir = "../../../assets/logo/";
+
+        function generateUniqueFilename($file, $prefix) {
+            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            return $prefix . '_' . uniqid() . '.' . $ext;
+        }
+
+        function handleFileUpload($file, $uploadDir, $prefix) {
+           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+            $maxFileSize = 10 * 1024 * 1024; // 10MB
+
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                return null;
+            }
+
+            // Ensure the temp file exists before checking MIME type
+            if (!file_exists($file['tmp_name'])) {
+                return null;
+            }
+
+            if (!in_array(mime_content_type($file['tmp_name']), $allowedTypes)) {
+                return null;
+            }
+
+            if ($file['size'] > $maxFileSize) {
+                return null;
+            }
+
+            $fileName = generateUniqueFilename($file, $prefix);
+            $destination = $uploadDir . $fileName;
+
+            if (move_uploaded_file($file['tmp_name'], $destination)) {
+                return $fileName;
+            }
+            return null;
+        }
+
+        $system_logo = $_FILES['system_logo'] ?? null;
+
+        $system_logoName = $system_logo ? handleFileUpload($system_logo, $uploadDir, "Assets") : null;
+
+        $system_name = htmlspecialchars($_POST['system_name']);
+
+        $result = $db->UpdateMaintenance($system_logoName,$system_name);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
     }
 }
 ?>

@@ -11,6 +11,71 @@ class global_class extends db_connect
         $this->connect();
     }
 
+
+
+
+    public function all_user_request()
+{
+    $query = "
+        SELECT 
+            users.fullname,
+            COUNT(*) AS totalRequest
+        FROM `request`
+        LEFT JOIN users ON users.id = request.request_user_id
+        WHERE request.request_status = 'Delivered'
+        GROUP BY users.fullname
+    ";
+
+    $result = $this->conn->query($query);
+
+    if ($result) {
+        $requestData = [];
+
+        while ($row = $result->fetch_assoc()) {
+            // Append the data to the array
+            $requestData[] = [
+                'fullname' => $row['fullname'],
+                'totalRequest' => $row['totalRequest']
+            ];
+        }
+
+        // Return the data as JSON
+        echo json_encode($requestData);
+    } else {
+        error_log('Database query failed: ' . $this->conn->error);
+        echo json_encode(['error' => 'Failed to retrieve monthly sales data']);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+    public function getDataAnalytics()
+    {
+        $query = "
+            SELECT 
+                (SELECT COUNT(*) FROM `users` WHERE status='1') AS totalUser,
+                (SELECT COUNT(*) FROM `request`) AS request,
+                (SELECT COUNT(*) FROM `assets`) AS totalAssets
+        ";
+    
+        $result = $this->conn->query($query);
+        
+        if ($result) {
+            $row = $result->fetch_assoc();
+            return $row;
+        }
+    }
+
+
+
     public function AddAssets($assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty){
         $query = $this->conn->prepare(
             "INSERT INTO `assets` (`asset_code`, `name`, `category_id`,`subcategory_id`,`office_id`,`price`, `condition_status`,`status`,`image`,`quantity`,`description`) VALUES (?,?,?,?,?,?,?,?,?,?,?)"

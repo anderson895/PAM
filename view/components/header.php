@@ -46,7 +46,7 @@ if (isset($_SESSION['id'])) {
 
  
 
-  
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 </head>
 <body class="bg-gray-100 font-sans antialiased ">
@@ -96,7 +96,6 @@ if (isset($_SESSION['id'])) {
 
 <?php if($_SESSION['role']=="Administrator"){ ?>
 
-    <!--START DROP DOWN MENU -->
     <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <div class="flex items-center space-x-3">
             <span class="material-icons">work</span>
@@ -113,11 +112,6 @@ if (isset($_SESSION['id'])) {
         <span class="material-icons">construction</span>
         <span>System Maintenance</span>
     </a>
-    <!--END DROP DOWN MENU -->
-    <!-- <a href="manage_assets" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
-        <span class="material-icons">work</span>
-        <span>Assets</span>
-    </a> -->
 
 
     <a href="reports" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">

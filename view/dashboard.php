@@ -3,6 +3,12 @@
 
 <?php 
  
+ $getDataAnalytics = $db->getDataAnalytics();
+
+//  echo "<pre>";
+//  print_r($getDataAnalytics );
+//  echo "</pre>";
+
 if($_SESSION['role']=="Administrator"){
         
 ?>
@@ -32,21 +38,21 @@ if($_SESSION['role']=="Administrator"){
     <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
         <img src="../assets/image/teamwork.png" alt="students icon" class="mb-4 w-12 max-w-full" />
         <h3 class="text-gray-700 font-semibold text-lg">No of Users</h3>
-        <p class="text-blue-500 text-2xl font-bold totalUser">0</p>
+        <p class="text-blue-500 text-2xl font-bold totalUser"><?=$getDataAnalytics['totalUser']?></p>
     </div>
 
     <!-- Card for Total Sales -->
     <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
         <img src="../assets/image/boxes.png" alt="students icon" class="mb-4 w-12 max-w-full" />
         <h3 class="text-gray-700 font-semibold text-lg">No of Assets</h3>
-        <p class="text-blue-500 text-2xl font-bold totalBranches">0</p>
+        <p class="text-blue-500 text-2xl font-bold totalBranches"><?=$getDataAnalytics['totalAssets']?></p>
     </div>
 
     <!-- Card for No of Orders -->
     <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
         <img src="../assets/image/job-application.png" alt="students icon" class="mb-4 w-12 max-w-full" />
         <h3 class="text-gray-700 font-semibold text-lg">No of Request</h3>
-        <p class="text-blue-500 text-2xl font-bold numOrders totalProduct">0</p>
+        <p class="text-blue-500 text-2xl font-bold numOrders totalProduct"><?=$getDataAnalytics['request']?></p>
     </div>
 </div>
 
@@ -55,7 +61,8 @@ if($_SESSION['role']=="Administrator"){
 
 <!-- Chart Section -->
 <div class="bg-white mt-6 p-6 rounded-lg shadow-md">
-       
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Overview</h3>
+        <div id="all_request_chart"></div>
 </div>
 
 
@@ -80,3 +87,6 @@ if($_SESSION['role']=="Administrator"){
 <?php }  ?>
 
 <?php include "components/footer.php";?>
+
+
+<script src="assets/js/all_user_request.js"></script>

@@ -591,3 +591,32 @@ $(document).on('change', '.togglerRequest', function(e) {
         }
     });
 });
+
+
+
+
+
+
+
+
+// LOGOUT HERE
+$(document).on('click', '.btnLogout', function(e) {
+    e.preventDefault();
+    var assets_id = $(this).data('id');
+
+    console.log(assets_id);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to logout',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'logout.php';
+
+        }
+    });
+});

@@ -122,12 +122,12 @@ if (isset($_SESSION['id'])) {
 <?php } ?> 
 
 
-    <a href="logout.php">
-        <button type="submit" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-red-500 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+  
+        <button class="btnLogout flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-red-500 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
             <span class="material-icons">logout</span>
             <span>Logout</span>
         </button>
-    </a>
+  
 </nav>
 </aside>
 

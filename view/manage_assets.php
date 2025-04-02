@@ -49,7 +49,7 @@
                 <tr>
                     <th class="p-3">#</th>
                     <th class="p-3">Image</th>
-                    <th class="p-3">Asset Code</th>
+                    <th class="p-3">Asset ID</th>
                     <th class="p-3">Name</th>
                     <th class="p-3">Description</th>
                     <th class="p-3">Category</th>
@@ -100,7 +100,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="add_assets_code" class="block text-sm font-medium text-gray-700">Asset Code</label>
+                <label for="add_assets_code" class="block text-sm font-medium text-gray-700">Asset ID</label>
                 <input type="text" id="add_assets_code" name="assets_code" class="w-full p-2 border rounded-md" required>
             </div>
 
@@ -267,7 +267,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="update_assets_code" class="block text-sm font-medium text-gray-700">Asset Code</label>
+                <label for="update_assets_code" class="block text-sm font-medium text-gray-700">Asset ID</label>
                 <input type="text" id="update_assets_code" name="assets_code" class="w-full p-2 border rounded-md" required>
             </div>
 

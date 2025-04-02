@@ -46,12 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $user_image = $_FILES['user_image'] ?? null;
-        $user_employee_id_image = $_FILES['user_employee_id_image'] ?? null;
 
         // NEW FILE NAME with Prefix
         $user_imageName = $user_image ? handleFileUpload($user_image, $uploadDir, "Profile") : null;
-        $user_employee_id_imageName = $user_employee_id_image ? handleFileUpload($user_employee_id_image, $uploadDir, "ID") : null;
-
+      
+        $userId = htmlspecialchars(trim($_POST['add_user_id']));
         $user_fullname = htmlspecialchars(trim($_POST['user_fullname']));
         $user_nickname = htmlspecialchars(trim($_POST['user_nickname']));
         $user_email = filter_var(trim($_POST['user_email']), FILTER_SANITIZE_EMAIL);
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $result = $db->Adduser($user_imageName, $user_employee_id_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation);
+        $result = $db->Adduser($userId,$user_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "User successfully registered"]);
@@ -115,11 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $user_image = $_FILES['user_image'] ?? null;
-        $user_employee_id_image = $_FILES['user_employee_id_image'] ?? null;
+        
 
         // NEW FILE NAME with Prefix
         $user_imageName = $user_image ? handleFileUpload($user_image, $uploadDir, "Profile") : null;
-        $user_employee_id_imageName = $user_employee_id_image ? handleFileUpload($user_employee_id_image, $uploadDir, "ID") : null;
+    
 
         $user_fullname = htmlspecialchars(trim($_POST['user_fullname']));
         $user_nickname = htmlspecialchars(trim($_POST['user_nickname']));
@@ -131,13 +130,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_type = $_POST['user_type'];
         $user_designation = $_POST['user_designation'];
         $update_id = $_POST['update_id'];
+        $userId = $_POST['update_user_id'];
 
         if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
             echo json_encode(["status" => 400, "message" => "Invalid email format"]);
             exit;
         }
 
-        $result = $db->updateUser($update_id,$user_imageName, $user_employee_id_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation);
+        $result = $db->updateUser($userId,$update_id,$user_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "User successfully registered"]);

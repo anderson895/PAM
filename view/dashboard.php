@@ -9,7 +9,7 @@
 //  print_r($getDataAnalytics );
 //  echo "</pre>";
 
-if($_SESSION['role']=="Administrator"){
+if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){
         
 ?>
 <!-- Top bar with user profile -->

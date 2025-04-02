@@ -133,6 +133,7 @@ $('#adduserButton').click(function (e) {
 
     $('.togglerUpdateUser').click(function (e) { 
       var id =$(this).data('id');
+      var user_id =$(this).data('user_id');
       var user_fullname =$(this).data('fullname');
       var user_nickname =$(this).data('nickname');
       var user_email =$(this).data('email');
@@ -140,8 +141,10 @@ $('#adduserButton').click(function (e) {
       var user_designation =$(this).data('designation');
   
    
+      console.log(user_id);
   
       $('#update_id').val(id)
+      $('#update_user_id').val(user_id)
       $('#update_user_fullname').val(user_fullname)
       $('#update_user_nickname').val(user_nickname)
       $('#update_user_email').val(user_email)

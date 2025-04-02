@@ -397,26 +397,14 @@ class global_class extends db_connect
 
 
 
-    public function Adduser($user_imageName, $user_employee_id_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
-        do {
-            $userId = rand(10000, 99999); 
-            $checkQuery = $this->conn->prepare("SELECT 1 FROM users WHERE id = ?");
-            
-            if ($checkQuery === false) {
-                die("Prepare failed: " . $this->conn->error);
-            }
-            $checkQuery->bind_param("s", $userId);
-            $checkQuery->execute();
-            $checkQuery->store_result();
-        } while ($checkQuery->num_rows > 0); 
-        $checkQuery->close();
-        // Hash password for security
+    public function Adduser($userId,$user_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
+       
         $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
         // Insert Data into Database
-        $sql = "INSERT INTO users (generated_id, email, password, fullname, nickname, role, designation, profile_picture, employee_id_picture) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (user_id, email, password, fullname, nickname, role, designation, profile_picture) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssssssss", $userId, $user_email, $hashed_password, $user_fullname, $user_nickname, $user_type, $user_designation, $user_imageName, $user_employee_id_imageName);
+        $stmt->bind_param("ssssssss", $userId, $user_email, $hashed_password, $user_fullname, $user_nickname, $user_type, $user_designation, $user_imageName);
         if ($stmt->execute()) {
             $stmt->close();
             return 'success';
@@ -482,11 +470,11 @@ class global_class extends db_connect
 
 
 
-    public function updateUser($update_id, $user_imageName, $user_employee_id_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
+    public function updateUser($userId,$update_id, $user_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
         // Start building the SQL query
-        $sql = "UPDATE users SET email = ?, fullname = ?, nickname = ?, role = ?, designation = ?";
-        $params = [$user_email, $user_fullname, $user_nickname, $user_type, $user_designation];
-        $types = "sssss"; // Data types: string (s)
+        $sql = "UPDATE users SET user_id=?, email = ?, fullname = ?, nickname = ?, role = ?, designation = ?";
+        $params = [$userId,$user_email, $user_fullname, $user_nickname, $user_type, $user_designation];
+        $types = "ssssss"; // Data types: string (s)
     
         // Check if profile picture is provided
         if (!empty($user_imageName)) {
@@ -495,13 +483,7 @@ class global_class extends db_connect
             $types .= "s";
         }
     
-        // Check if employee ID picture is provided
-        if (!empty($user_employee_id_imageName)) {
-            $sql .= ", employee_id_picture = ?";
-            $params[] = $user_employee_id_imageName;
-            $types .= "s";
-        }
-    
+     
         // Check if password is provided (update only if not empty)
         if (!empty($user_password)) {
             $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);

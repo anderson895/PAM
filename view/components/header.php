@@ -74,7 +74,7 @@ if (isset($_SESSION['id'])) {
 
 <nav class="space-y-4 text-left lg:text-left">
    
-<?php if($_SESSION['role']=="Administrator"){ ?>
+<?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
 
 
     <a href="dashboard" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
@@ -94,7 +94,7 @@ if (isset($_SESSION['id'])) {
     </a>
 
 
-<?php if($_SESSION['role']=="Administrator"){ ?>
+<?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
 
     <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <div class="flex items-center space-x-3">

@@ -6,7 +6,7 @@
 
 <?php 
  
-if($_SESSION['role']=="Administrator"){
+ if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){
         
 ?>
 
@@ -89,6 +89,14 @@ if($_SESSION['role']=="Administrator"){
             </div>
 
             <input hidden type="text" id="update_id" name="update_id">
+
+
+             
+            <div class="mb-4">
+                <label for="update_user_id" class="block text-sm font-medium text-gray-700">User ID</label>
+                <input type="text" id="update_user_id" name="update_user_id" class="w-full p-2 border rounded-md" required>
+            </div>
+
             <div class="mb-4">
                 <label for="update_user_fullname" class="block text-sm font-medium text-gray-700">Fullname</label>
                 <input type="text" id="update_user_fullname" name="user_fullname" class="w-full p-2 border rounded-md" required>
@@ -108,9 +116,11 @@ if($_SESSION['role']=="Administrator"){
                 <label for="update_user_type" class="block text-sm font-medium text-gray-700">User Type</label>
                 <select name="user_type" id="update_user_type" class="w-full p-2 border rounded-md" required>
                     <option value="Administrator">Administrator</option>
-                    <option value="Registrar">Registrar</option>
+                    <option value="Office Heads">Office Heads</option>
+                    <option value="IACEPO & NSTP">IACEPO & NSTP</option>
                     <option value="Finance">Finance</option>
-                    <option value="IACEPO">IACEPO</option>
+                    <option value="Library">Library</option>
+                    <option value="Basic Education">Basic Education</option>
                 </select>
             </div>
 
@@ -132,10 +142,6 @@ if($_SESSION['role']=="Administrator"){
                 <input type="file" id="update_user_image" name="user_image" class="w-full p-2 border rounded-md">
             </div>
 
-            <div class="mb-4">
-                <label for="update_user_employee_id" class="block text-sm font-medium text-gray-700">Employee ID</label>
-                <input type="file" id="update_user_employee_id" name="user_employee_id_image" class="w-full p-2 border rounded-md">
-            </div>
 
             <div class="mb-4">
                 <label for="update_user_password" class="block text-sm font-medium text-gray-700">New Password</label>
@@ -165,6 +171,13 @@ if($_SESSION['role']=="Administrator"){
                 </div>
             </div>
 
+            
+            <div class="mb-4">
+                <label for="add_user_id" class="block text-sm font-medium text-gray-700">User ID</label>
+                <input type="text" id="add_user_id" name="add_user_id" class="w-full p-2 border rounded-md" required>
+            </div>
+
+
             <div class="mb-4">
                 <label for="add_user_fullname" class="block text-sm font-medium text-gray-700">Fullname</label>
                 <input type="text" id="add_user_fullname" name="user_fullname" class="w-full p-2 border rounded-md" required>
@@ -184,9 +197,11 @@ if($_SESSION['role']=="Administrator"){
                 <label for="add_user_type" class="block text-sm font-medium text-gray-700">User Type</label>
                 <select name="user_type" id="add_user_type" class="w-full p-2 border rounded-md" required>
                     <option value="Administrator">Administrator</option>
-                    <option value="Registrar">Registrar</option>
+                    <option value="Office Heads">Office Heads</option>
+                    <option value="IACEPO & NSTP">IACEPO & NSTP</option>
                     <option value="Finance">Finance</option>
-                    <option value="IACEPO">IACEPO</option>
+                    <option value="Library">Library</option>
+                    <option value="Basic Education">Basic Education</option>
                 </select>
             </div>
 
@@ -210,11 +225,7 @@ if($_SESSION['role']=="Administrator"){
                 <input type="file" id="add_user_image" name="user_image" class="w-full p-2 border rounded-md">
             </div>
 
-            <div class="mb-4">
-                <label for="add_user_employee_id" class="block text-sm font-medium text-gray-700">Employee ID</label>
-                <input type="file" id="add_user_employee_id" name="user_employee_id_image" class="w-full p-2 border rounded-md">
-            </div>
-
+       
             <div class="mb-4">
                 <label for="add_user_password" class="block text-sm font-medium text-gray-700">Password</label>
                 <input type="password" id="add_user_password" name="user_password" class="w-full p-2 border rounded-md" required>

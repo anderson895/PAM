@@ -6,7 +6,7 @@
 
 
                     <tr>
-                        <td class="p-2"><?php echo htmlspecialchars($user['generated_id']); ?></td>
+                        <td class="p-2"><?php echo htmlspecialchars($user['user_id']); ?></td>
                         <td class="p-2">
                             <div class="flex items-center justify-center w-12 h-12">
                                 <?php if (!empty($user['profile_picture'])): ?>
@@ -32,6 +32,7 @@
                             <td class="p-2">
                                 <button class="bg-blue-500 text-white py-1 px-3 rounded-md togglerUpdateUser" 
                                     data-id="<?= htmlspecialchars($user['id']) ?>"
+                                    data-user_id="<?= htmlspecialchars($user['user_id']) ?>"
                                     data-fullname="<?= htmlspecialchars($user['fullname']) ?>"
                                     data-nickname="<?= htmlspecialchars($user['nickname']) ?>"
                                     data-role="<?= htmlspecialchars($user['role']) ?>"

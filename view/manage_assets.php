@@ -81,7 +81,7 @@
 
 <!-- Modal for Adding Promo -->
 <div id="addAssetsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="display:none;">
-    <div class="bg-white rounded-lg shadow-lg w-[40rem] p-6"> <!-- Updated width -->
+    <div class="bg-white rounded-lg shadow-lg w-[40rem] max-h-[80vh] overflow-y-auto p-6"> <!-- Added max-height and overflow-y-auto -->
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Add New Assets</h3>
         <form id="addAssetFrm" >
             
@@ -91,6 +91,7 @@
                     <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             </div>
+            
 
 
             <div class="mb-4">
@@ -214,6 +215,22 @@
                 <label for="assets_qty" class="block text-sm font-medium text-gray-700">Quantity</label>
                 <input type="number" id="add_assets_qty" name="assets_qty" class="w-full p-2 border rounded-md">
             </div>
+
+
+            <div class="mb-4">
+                <label for="assets_variety_name" class="block text-sm font-medium text-gray-700">Variety Name</label>
+                <input type="text" id="assets_variety_name" name="assets_variety_name" class="w-full p-2 border rounded-md" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="assets_variety_value" class="block text-sm font-medium text-gray-700">Variety Value</label>
+                <div id="variety-values-container">
+                    <input type="text" name="assets_variety_value[]" class="w-full p-2 mb-2 border rounded-md" required>
+                </div>
+                <button type="button" class="add-variety-value mt-2 text-blue-500">Add Another Variety Value</button>
+            </div>
+
+
 
             <div class="flex justify-end gap-2">
                 <button type="button" class="addUserModalClose bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded-md">Cancel</button>
@@ -366,6 +383,23 @@
                 <input type="number" id="update_assets_qty" name="assets_qty" class="w-full p-2 border rounded-md">
             </div>
 
+          <!-- Variety Section in the Form -->
+            <div class="mb-4">
+                <label for="update_assets_variety_name" class="block text-sm font-medium text-gray-700">Variety Name</label>
+                <input type="text" id="update_assets_variety_name" name="assets_variety_name" class="w-full p-2 border rounded-md" readonly>
+            </div>
+
+            <div class="mb-4">
+                <label for="update_assets_variety_values" class="block text-sm font-medium text-gray-700">Variety Values</label>
+                <div id="update_assets_variety_values" class="update_assets_variety_values">
+                    <!-- Existing variety values will be appended here -->
+                </div>
+                <button type="button" class="add-variety-value mt-2 p-2 bg-blue-500 text-white rounded-md">Add Variety</button>
+            </div>
+
+
+
+
             <div class="flex justify-end gap-2">
                 <button type="button" class="updateUserModalClose bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded-md">Cancel</button>
                 <button id="btnUpdateAssets" type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md">Update</button>
@@ -381,6 +415,16 @@
 <script>
 
 $(document).ready(function () {
+
+
+
+
+
+
+
+
+
+
     $("#add_assets_category").change(function () {
         var selectedCategory = $(this).val(); // Kunin ang napiling category ID
 

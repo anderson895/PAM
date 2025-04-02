@@ -46,6 +46,7 @@
                                     data-status="<?= htmlspecialchars($user['status']) ?>"
                                     data-price="<?= htmlspecialchars($user['price']) ?>"
                                     data-description="<?= htmlspecialchars($user['description']) ?>"
+                                    data-variety="<?= htmlspecialchars($user['variety']) ?>"
                                    >
                                     Update 
                                 </button>

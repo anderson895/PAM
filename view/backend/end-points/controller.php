@@ -195,66 +195,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $uploadDir = "../../../uploads/images/";
 
-        function generateUniqueFilename($file, $prefix) {
-            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-            return $prefix . '_' . uniqid() . '.' . $ext;
-        }
+function generateUniqueFilename($file, $prefix) {
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    return $prefix . '_' . uniqid() . '.' . $ext;
+}
 
-        function handleFileUpload($file, $uploadDir, $prefix) {
-           $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-            $maxFileSize = 10 * 1024 * 1024; // 10MB
+function handleFileUpload($file, $uploadDir, $prefix) {
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    $maxFileSize = 10 * 1024 * 1024; // 10MB
 
-            if ($file['error'] !== UPLOAD_ERR_OK) {
-                return null;
-            }
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
 
-            // Ensure the temp file exists before checking MIME type
-            if (!file_exists($file['tmp_name'])) {
-                return null;
-            }
+    // Ensure the temp file exists before checking MIME type
+    if (!file_exists($file['tmp_name'])) {
+        return null;
+    }
 
-            if (!in_array(mime_content_type($file['tmp_name']), $allowedTypes)) {
-                return null;
-            }
+    if (!in_array(mime_content_type($file['tmp_name']), $allowedTypes)) {
+        return null;
+    }
 
-            if ($file['size'] > $maxFileSize) {
-                return null;
-            }
+    if ($file['size'] > $maxFileSize) {
+        return null;
+    }
 
-            $fileName = generateUniqueFilename($file, $prefix);
-            $destination = $uploadDir . $fileName;
+    $fileName = generateUniqueFilename($file, $prefix);
+    $destination = $uploadDir . $fileName;
 
-            if (move_uploaded_file($file['tmp_name'], $destination)) {
-                return $fileName;
-            }
-            return null;
-        }
-
-        $assets_image = $_FILES['assets_img'] ?? null;
-
-        // NEW FILE NAME with Prefix
-        $assets_imageName = $assets_image ? handleFileUpload($assets_image, $uploadDir, "Assets") : null;
-
-        $assets_code = htmlspecialchars(trim($_POST['assets_code']));
-        $assets_name = htmlspecialchars(trim($_POST['assets_name']));
-        $assets_Office = htmlspecialchars(trim($_POST['assets_Office']));
-        $assets_category = htmlspecialchars(trim($_POST['assets_category']));
-        $assets_subcategory = htmlspecialchars(trim($_POST['assets_subcategory']));
-        $assets_condition = htmlspecialchars(trim($_POST['assets_condition']));
-        $assets_status = htmlspecialchars(trim($_POST['assets_status']));
-        $assets_description = htmlspecialchars(trim($_POST['assets_description']));
-        $assets_price = htmlspecialchars(trim($_POST['assets_price']));
-        $assets_qty = htmlspecialchars(trim($_POST['assets_qty']));
-    
+    if (move_uploaded_file($file['tmp_name'], $destination)) {
+        return $fileName;
+    }
+    return null;
+}
 
 
-        $result = $db->AddAssets($assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty);
+$assets_image = $_FILES['assets_img'] ?? null;
 
-        if ($result == "success") {
-            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
-        } else {
-            echo json_encode(["status" => 400, "message" => $result]);
-        }
+$assets_imageName = $assets_image ? handleFileUpload($assets_image, $uploadDir, "Assets") : null;
+
+// Sanitize and collect the form input values
+$assets_code = htmlspecialchars(trim($_POST['assets_code'] ?? ''));
+$assets_name = htmlspecialchars(trim($_POST['assets_name'] ?? ''));
+$assets_Office = htmlspecialchars(trim($_POST['assets_Office'] ?? ''));
+$assets_category = htmlspecialchars(trim($_POST['assets_category'] ?? ''));
+$assets_subcategory = htmlspecialchars(trim($_POST['assets_subcategory'] ?? ''));
+$assets_condition = htmlspecialchars(trim($_POST['assets_condition'] ?? ''));
+$assets_status = htmlspecialchars(trim($_POST['assets_status'] ?? ''));
+$assets_description = htmlspecialchars(trim($_POST['assets_description'] ?? ''));
+$assets_price = htmlspecialchars(trim($_POST['assets_price'] ?? ''));
+$assets_qty = htmlspecialchars(trim($_POST['assets_qty'] ?? ''));
+
+$assets_variety_name = htmlspecialchars(trim($_POST['assets_variety_name'] ?? ''));
+$assets_variety_values = isset($_POST['assets_variety_value']) ? $_POST['assets_variety_value'] : [];
+
+if (!empty($assets_variety_name) && !empty($assets_variety_values)) {
+    $variety_json = json_encode([
+        'name' => $assets_variety_name,
+        'values' => $assets_variety_values
+    ], JSON_UNESCAPED_UNICODE);  
+} else {
+    $variety_json = null;  
+}
+
+$result = $db->AddAssets(
+    $assets_imageName,
+    $assets_code,
+    $assets_name,
+    $assets_Office,
+    $assets_category,
+    $assets_subcategory,
+    $assets_condition,
+    $assets_status,
+    $assets_description,
+    $assets_price,
+    $assets_qty,
+    $variety_json
+);
+
+if ($result == "success") {
+    echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+} else {
+    echo json_encode(["status" => 400, "message" => $result]);
+}
+
+
+        
 
     }else if($_POST['requestType'] =='UpdateAssets'){
 
@@ -313,8 +340,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $assets_qty = htmlspecialchars(trim($_POST['assets_qty']));
     
 
+        $assets_variety_name = htmlspecialchars(trim($_POST['assets_variety_name'] ?? ''));
+        $assets_variety_values = isset($_POST['assets_variety_value']) ? $_POST['assets_variety_value'] : [];
 
-        $result = $db->UpdateAssets($assets_id,$assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty);
+        if (!empty($assets_variety_name) && !empty($assets_variety_values)) {
+            $variety_json = json_encode([
+                'name' => $assets_variety_name,
+                'values' => $assets_variety_values
+            ], JSON_UNESCAPED_UNICODE);  
+        } else {
+            $variety_json = null;  
+        }
+
+
+
+        $result = $db->UpdateAssets($assets_id,$assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty,$variety_json);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "Successfully Added"]);

@@ -12,8 +12,13 @@ $('.togglerUpdateAssets').click(function (e) {
     let office_id = $(this).data('office_id');
     let quantity = $(this).data('quantity');
     let status = $(this).data('status');
+    let variety = $(this).data('variety'); // This is the variety data, which might already be an object
 
-   console.log(id);
+    console.log(id);
+    console.log(variety);
+
+    // Check if the variety data is already an object or a string
+    let parsedVariety = (typeof variety === 'string') ? JSON.parse(variety) : variety;
 
     // Set values in the modal form
     $("#assets_id").val(id);
@@ -21,18 +26,98 @@ $('.togglerUpdateAssets').click(function (e) {
     $("#update_assets_name").val(name);
     $("#update_assets_description").val(description);
     $("#update_assets_price").val(price);
-    
     $("#update_assets_category").val(category_id);
     $("#update_assets_subcategory").val(subcategory_id);
     $("#update_assets_condition").val(condition_status);
     $("#update_assets_Office").val(office_id);
-
     $("#update_assets_qty").val(quantity);
     $("#update_assets_status").val(status);
+
+    // Display the variety name in the input field
+    if (parsedVariety && parsedVariety.name) {
+        $("#update_assets_variety_name").val(parsedVariety.name);
+    }
+
+    // Clear the previous variety values
+    $(".update_assets_variety_values").empty();
+
+    // Display the variety values as input fields
+    if (parsedVariety && parsedVariety.values) {
+        parsedVariety.values.forEach((value, index) => {
+            let newInputGroup = $('<div class="input-group mb-2 flex items-center"></div>');
+            let inputField = $('<input type="text" name="assets_variety_value[]" class="w-full p-2 border rounded-md" value="' + value + '" required>');
+            let removeButton = $('<button type="button" class="remove-btn p-1 bg-transparent text-red-500 text-lg font-bold border-none">X</button>');
+            
+            // Append the input field and remove button into the input group
+            newInputGroup.append(inputField);
+            newInputGroup.append(removeButton);
+            
+            // Add the new input group to the container
+            $('.update_assets_variety_values').append(newInputGroup);
+            
+            // Attach click event to the remove button
+            removeButton.click(function() {
+                newInputGroup.remove();  // Remove the entire input group (input + button)
+            });
+        });
+    }
 
     // Show the modal
     $('#updateAssetsModal').fadeIn();
 });
+
+
+
+$('.add-variety-value').on('click', function() {
+    // Create the new input field
+    const newInput = $('<input type="text" name="assets_variety_value[]" class="w-full p-2 mb-2 border rounded-md" required>');
+
+    // Create the remove button
+    const removeButton = $('<button type="button" class="remove-btn p-1 bg-transparent text-red-500 text-lg font-bold border-none">X</button>');
+    
+    // Append the new input field and the remove button inside a wrapper div
+    const inputWrapper = $('<div class="input-wrapper mb-2 flex items-center"></div>');
+    inputWrapper.append(newInput);
+    inputWrapper.append(removeButton);
+    
+    // Append the input wrapper (containing both input and remove button) to the container
+    $('#variety-values-container').append(inputWrapper);
+
+    // Attach the click event for the remove button
+    removeButton.on('click', function() {
+        inputWrapper.remove();  // Remove the whole input wrapper (input and button)
+    });
+});
+
+
+
+$('.add-variety-value').on('click', function() {
+    // Create a wrapper div for each new input field
+    const newInputGroup = $('<div class="input-group mb-2 flex items-center"></div>');
+
+    // Create the input field
+    const newInputField = $('<input type="text" name="assets_variety_value[]" class="w-full p-2 mb-2 border rounded-md" required>');
+
+    // Create the remove button
+    const removeButton = $('<button type="button" class="remove-btn p-1 bg-transparent text-red-500 text-lg font-bold border-none">X</button>');
+
+    // Append the input field and remove button into the input group
+    newInputGroup.append(newInputField);
+    newInputGroup.append(removeButton);
+
+    // Append the new input group to the variety values container
+    $('#update_assets_variety_values').append(newInputGroup);
+
+    // Attach the click event to remove the input group
+    removeButton.on('click', function() {
+        newInputGroup.remove(); // Remove the entire input group (input + button)
+    });
+});
+
+
+
+
+
 
 // Close modal functionality
 $('.updateUserModalClose').click(function () {
@@ -299,8 +384,8 @@ $("#createRequestFrm").submit(function (e) {
         e.preventDefault();
   
       
-        $('.spinner').show();
-        $('#btnAddAssets').prop('disabled', true);
+        // $('.spinner').show();
+        // $('#btnAddAssets').prop('disabled', true);
     
         var formData = new FormData(this); 
         formData.append('requestType', 'AddAssets');

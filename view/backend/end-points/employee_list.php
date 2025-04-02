@@ -22,7 +22,7 @@ if (isset($_POST['query'])) {
     while ($row = $result->fetch_assoc()) {
         $data[] = [
             "id" => $row['id'],
-            "generated_id" => $row['generated_id'],
+            "user_id" => $row['user_id'],
             "fullname" => $row['fullname'],
             "designation" => $row['designation'],
         ];

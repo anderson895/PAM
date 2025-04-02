@@ -4,6 +4,7 @@ include('../class.php');
 $db = new global_class();
 
 
+
 $product_Category = $product_Promo = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($_POST['requestType'] =='Adduser'){
@@ -429,6 +430,95 @@ if ($result == "success") {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
+
+    }else if($_POST['requestType'] =='AddCart'){
+
+        session_start();
+        $add_id = intval($_SESSION['id']);
+        $asset_id = $_POST['asset_id'];
+        $qty = $_POST['qty'];
+        $variety = $_POST['variety'];
+
+      
+        $result = $db->AddCart($add_id,$asset_id,$qty,$variety);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
+    }else if($_POST['requestType'] =='confirmRequest'){
+
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
+
+
+        session_start();
+        $add_id = intval($_SESSION['id']);
+        $supplier_name = $_POST['supplier_name'];
+        $supplier_company = $_POST['supplier_company'];
+        $designation = $_POST['designation'];
+        // $cart_items = $_POST['cart_items'];
+
+    
+      
+        $request_result = $db->confirmRequest($add_id,$supplier_name,$supplier_company,$designation);
+            
+        if (isset($request_result['id']) && isset($request_result['invoice'])) { 
+            $request_id = $request_result['id'];
+            $request_invoice = $request_result['invoice'];
+            $request_user_id = $request_result['request_user_id'];
+        
+            echo json_encode([
+                "status" => 200, 
+                "message" => "Inventory record successfully added",
+                "request_id" => $request_id,
+                "invoice" => $request_invoice,
+            ]);
+        
+            // Process cart items only if purchase record was successfully inserted
+            if (!empty($_POST['cart_items']) && is_array($_POST['cart_items'])) {
+                foreach ($_POST['cart_items'] as $item) {
+                    if (isset($item['asset_id']) && isset($item['cart_qty']) && isset($item['cart_id'])) {
+                        $cart_id = $item['cart_id'];
+                        $asset_id = $item['asset_id'];
+                        $price = $item['price'];
+                        $cart_qty = $item['cart_qty'];
+                        $cart_variety = $item['cart_variety'];
+        
+                        // Pass the valid purchase ID
+                        $db->addpurchase_item($request_id,$add_id,$cart_id,$asset_id,$price, $cart_qty,$cart_variety);
+                    }
+                }
+            } else {
+                echo json_encode(["status" => 400, "message" => "No valid cart items found"]);
+            }
+        } else {
+            echo json_encode(["status" => 400, "message" => $purchase_result['error'] ?? "Failed to add request record"]);
+        }
+
+    }else if($_POST['requestType'] =='remove_from_cart'){
+
+
+        session_start();
+        $cart_id = $_POST['cart_id'];
+
+      
+        $result = $db->remove_from_cart($cart_id);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
+    }else{
+
+        echo "<pre>";
+        print_r($_POST);
+        echo "</pre>";
 
     }
 }

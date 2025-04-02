@@ -1,3 +1,8 @@
+
+
+
+
+
 $('.togglerUpdateAssets').click(function (e) { 
     e.preventDefault();
 
@@ -258,14 +263,33 @@ $('#adduserButton').click(function (e) {
 
 
 
-$("#createRequestFrm").submit(function (e) {
+$("#frmAddTocart").submit(function (e) {
         e.preventDefault();
     
-        $('.spinner').show();
-        $('#btnCreateRequest').prop('disabled', true);
+        let variety = $("#variety").val();
+        let qty = $("#qty").val();  
+        let varietyName = $("#varietyName").val();  
+       
+        if (!qty || qty <= 0) {
+            alertify.error("Enter a valid quantity");
+            return;
+        }
+
+        console.log(variety);
+
+        if (!variety) {
+            const capitalizedVarietyName = varietyName.charAt(0).toUpperCase() + varietyName.slice(1);
+            alertify.error(`Select ${capitalizedVarietyName} is required`);
+            return;
+        }
+
+
+        
+        
+        $('#BtnaddToCart').prop('disabled', true);
     
         var formData = new FormData(this);
-        formData.append('requestType', 'CreateRequest');
+        formData.append('requestType', 'AddCart');
         
         $.ajax({
             type: "POST",
@@ -276,14 +300,10 @@ $("#createRequestFrm").submit(function (e) {
             dataType: 'json',
             success: function (response) {
                 console.log(response);
-                $('.spinner').hide();
-                $('#btnCreateRequest').prop('disabled', false);
+                $('#BtnaddToCart').prop('disabled', false);
     
                 if (response.status == 200) {
-                    alertify.success('Success');
-                    setTimeout(function () {
                         location.reload();
-                    }, 1000);
                 } else {
                     alertify.error(response.message);
                 }

@@ -226,6 +226,113 @@ class global_class extends db_connect
     }
 
 
+
+    public function AddCart($add_id,$asset_id,$qty,$variety) {
+        // Check if the asset already exists in the cart
+        $checkQuery = $this->conn->prepare("SELECT cart_qty FROM request_cart WHERE cart_user_id = ? AND cart_asset_id = ? AND cart_variety = ?");
+        $checkQuery->bind_param("iis", $add_id, $asset_id,$variety);
+        $checkQuery->execute();
+        $result = $checkQuery->get_result();
+    
+        if ($result->num_rows > 0) {
+            // Item exists, update the quantity
+            $updateQuery = $this->conn->prepare("UPDATE request_cart SET cart_qty = cart_qty + $qty WHERE cart_user_id = ? AND cart_asset_id = ?");
+            $updateQuery->bind_param("ii", $add_id, $asset_id);
+            return $updateQuery->execute();
+        } else {
+            // Item does not exist, insert a new row
+            $insertQuery = $this->conn->prepare("INSERT INTO request_cart (cart_user_id, cart_asset_id, cart_qty, cart_variety) VALUES (?, ?, ?,?)");
+            $insertQuery->bind_param("iiis", $add_id, $asset_id,$qty,$variety);
+            return $insertQuery->execute();
+        }
+    }
+
+
+
+    // public function confirmRequest($add_id,$supplier_name,$supplier_company,$designation) {
+       
+    //         // Item does not exist, insert a new row
+    //         $insertQuery = $this->conn->prepare("INSERT INTO request (request_user_id, request_supplier_name, request_supplier_company,request_designation) VALUES (?,?,?,?)");
+    //         $insertQuery->bind_param("isss", $add_id, $supplier_name,$supplier_company,$designation);
+    //         return $insertQuery->execute();
+        
+    // }
+
+    public function confirmRequest($add_id,$supplier_name,$supplier_company,$designation){
+        // Generate a unique invoice number
+        do {
+            $request_invoice = 'REQ-' . time() . rand(1000, 9999);
+            $checkQuery = $this->conn->prepare("SELECT COUNT(*) FROM `request` WHERE `request_invoice` = ?");
+            $checkQuery->bind_param("s", $request_invoice);
+            $checkQuery->execute();
+            $checkQuery->bind_result($count);
+            $checkQuery->fetch();
+            $checkQuery->close();
+        } while ($count > 0); // Repeat until a unique invoice is found
+    
+        // Prepare the insert query
+        $query = $this->conn->prepare(
+            "INSERT INTO `request` (`request_invoice`,`request_user_id`, `request_supplier_name`,`request_supplier_company`, `request_designation`) 
+            VALUES ( ?, ?,?, ?, ?)"
+        );
+        $query->bind_param("sisss",$request_invoice, $add_id, $supplier_name,$supplier_company, $designation);
+    
+        if ($query->execute()) {
+            return [
+                'id' => $this->conn->insert_id, 
+                'invoice' => $request_invoice,
+                'request_user_id' => $add_id,
+            ]; // Return both the inserted ID and the invoice number
+        } else {
+            return ['error' => 'Error: ' . $query->error];
+        }
+    }
+
+
+
+    public function addpurchase_item($request_id,$add_id,$cart_id,$asset_id,$price, $cart_qty,$cart_variety) {
+        // Insert purchase item
+        $query = $this->conn->prepare("
+            INSERT INTO `request_item` (`r_request_id`, `r_item_asset_id`, `r_item_qty`, `r_item_variety`, `r_item_price`) 
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        $query->bind_param("iiisd", $request_id, $asset_id, $cart_qty, $cart_variety, $price);
+        
+        if (!$query->execute()) {
+            return 'Error: ' . $query->error;
+        }
+        $query->close(); // Close statement
+    
+     
+    
+        // Fetch all cart items for the given product and branch
+        $cartQuery = $this->conn->prepare("
+            SELECT cart_id  
+            FROM request_cart 
+            WHERE cart_asset_id = ? AND cart_user_id = ?
+        ");
+        $cartQuery->bind_param("ii", $asset_id, $add_id);
+        $cartQuery->execute();
+        $result = $cartQuery->get_result();
+        $cartQuery->close(); // Close statement after use
+    
+        if ($result->num_rows > 0) {
+            // Delete each cart entry
+            while ($row = $result->fetch_assoc()) {
+                $deleteQuery = $this->conn->prepare("
+                    DELETE FROM request_cart WHERE cart_id = ?
+                ");
+                $deleteQuery->bind_param("i", $row['cart_id']);
+                $deleteQuery->execute();
+                $deleteQuery->close(); // Close each delete query
+            }
+        }
+    
+        return 'success';
+    }
+    
+
+
     public function fetch_all_request() {
         $query = $this->conn->prepare("
             SELECT 
@@ -243,7 +350,7 @@ class global_class extends db_connect
                 users.id AS user_id,
                 users.fullname AS user_fullname,
                 users.email AS user_email,
-                users.generated_id,
+                users.user_id,
                 users.designation as user_designation,
                 
                 -- Asset Fields
@@ -394,7 +501,19 @@ class global_class extends db_connect
         }
     }
 
-
+    
+    public function remove_from_cart($cart_id){
+        $query = $this->conn->prepare("DELETE FROM `request_cart` WHERE cart_id = ?");
+        
+        $query->bind_param("i", $cart_id); 
+        
+        if ($query->execute()) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+    
 
     
 
@@ -539,7 +658,40 @@ class global_class extends db_connect
     
 
 
-
+    public function fetch_all_cart($id) {
+        $query = $this->conn->prepare("
+            SELECT c.cart_id, 
+                a.asset_code, 
+                a.id as asset_id, 
+                a.name, 
+                a.price,
+                c.cart_qty,
+                c.cart_variety
+            FROM request_cart c 
+            JOIN assets a ON c.cart_asset_id = a.id
+            WHERE c.cart_user_id = ?
+        ");
+        
+        $query->bind_param("i", $id);
+        $query->execute();
+        $result = $query->get_result();
+    
+        $cartItems = [];
+    
+        while ($row = $result->fetch_assoc()) {
+            $cartItems[] = [
+                'cart_id' => $row['cart_id'], 
+                'asset_id' => $row['asset_id'], 
+                'asset_code ' => $row['asset_code'],
+                'name' => ucfirst($row['name']),
+                'price' => $row['price'],
+                'cart_qty' => $row['cart_qty'],
+                'cart_variety' => ucfirst($row['cart_variety'])
+            ];
+        }
+    
+        return $cartItems;
+    }
 
 
 

@@ -7,7 +7,7 @@
                             <td class="p-2"><?php echo $count++; ?></td>
                         
                             <td class="p-2"><?php echo htmlspecialchars(ucfirst($user['user_fullname'])); ?></td>
-                            <td class="p-2"><?php echo htmlspecialchars(ucfirst($user['generated_id'])); ?></td>
+                            <td class="p-2"><?php echo htmlspecialchars(ucfirst($user['user_id'])); ?></td>
                             <td class="p-2"><?php echo htmlspecialchars($user['user_designation']); ?></td>
                             <td class="p-2"><?php echo htmlspecialchars($user['asset_name']); ?></td>
                             <td class="p-2"><?php echo htmlspecialchars($user['request_qty']); ?></td>

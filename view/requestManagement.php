@@ -25,7 +25,6 @@
 
 
 
-<!-- Search Input with Icon -->
 <div class="relative mb-4 w-full max-w-md">
     <span class="absolute inset-y-0 left-3 flex items-center text-gray-500">
         <i class="material-icons text-lg">search</i>
@@ -34,168 +33,400 @@
         class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-red-400 transition">
 </div>
 
-<!-- User Table Card -->
-<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <button id="CreateRequestButton" class="bg-red-500 text-white py-2 px-4 text-sm rounded-lg flex items-center hover:bg-red-600 transition duration-300 mb-4">
-        <span class="material-icons mr-2 text-base">description</span>
-        Create Request
-    </button>
 
-    <!-- Table Wrapper for Responsiveness -->
-    <div class="overflow-x-auto">
-        <table id="userTable" class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="bg-gray-100 text-gray-700">
-                <tr>
-                    <th class="p-3">#</th>
-                    <th class="p-3">Full Name</th>
-                    <th class="p-3">Employee ID</th>
-                    <th class="p-3">Office Designation</th>
-                    <th class="p-3">Item</th>
-                    <th class="p-3">Qty</th>
-                    <th class="p-3">Date</th>
-                    <th class="p-3">Supplier Name</th>
-                    <th class="p-3">Supplier Company</th>
-                    <th class="p-3">Status</th>
-                    
-                    <?php if ($On_Session[0]['role'] == "Administrator") {
-                        echo '<th class="p-3 text-center">Action</th>';
-                    } ?>
-                </tr>
-            </thead>
-            <tbody>
+<!-- User Table Card -->
+<div class="max-w-7xl mx-auto grid grid-cols-12 gap-4">
+        
+    <!-- Menu Section -->
+    <div class="col-span-8 bg-white p-4 rounded-xl shadow-md">
+        <h2 class="text-xl font-bold mb-4">Item list</h2>
+        <div class="flex space-x-2 mb-4">
+            <button class="px-4 py-2 bg-blue-500 text-white rounded" id="filterAll">All</button>
             <?php 
-                include "backend/end-points/request_list.php"; 
+                $fetch_all_category = $db->fetch_all_category();
+                if ($fetch_all_category->num_rows > 0): 
+                    while ($category = $fetch_all_category->fetch_assoc()): 
             ?>
-            </tbody>
-        </table>
+            <button class="px-4 py-2 bg-gray-200 rounded category-filter" data-category_id='<?=$category['id']?>'><?=$category['category_name']?></button>
+            <?php endwhile; ?>
+            <?php else: ?>
+                <p class="p-2 text-center">No record found.</p>
+            <?php endif; ?>
+        </div>
+        <div class="grid grid-cols-3 gap-4" id="assetsContainer">
+            <?php 
+                $fetch_all_assets = $db->fetch_all_assets();
+                if ($fetch_all_assets->num_rows > 0): 
+                    while ($assets = $fetch_all_assets->fetch_assoc()): 
+            ?>
+            <div class="border p-4 rounded-xl shadow-md asset-item" data-category_id='<?=$assets['category_id']?>'>
+                <?php if (!empty($assets['image'])): ?>
+                    <img src="../uploads/images/<?php echo htmlspecialchars($assets['image']); ?>" 
+                        alt="Profile Picture" 
+                        class="rounded-md mb-2 w-full h-40 object-cover">
+                <?php else: ?>
+                    <i class="material-icons text-gray-500" style="font-size: 3rem;">image</i>
+                <?php endif; ?>
+                <h3 class="font-bold"><?php echo htmlspecialchars(ucfirst($assets['name'])); ?></h3>
+                <p class="text-gray-600">₱<?php echo htmlspecialchars(number_format($assets['price'],2)); ?></p>
+                <button class="mt-2 w-full bg-blue-500 text-white py-2 rounded togglerViewCart" 
+                data-asset_id='<?=$assets['id']?>'
+                data-name='<?=ucfirst($assets['name'])?>'
+                data-variety='<?=$assets['variety']?>'
+                >Add</button>
+            </div>
+            <?php endwhile; ?>
+            <?php else: ?>
+                <p class="p-2 text-center">No record found.</p>
+            <?php endif; ?>
+        </div>
     </div>
+
+    <!-- Cart Section -->
+    <div class="col-span-4 bg-white p-4 rounded-xl shadow-md">
+        <h2 class="text-xl font-bold mb-4">Request Summary</h2>
+        <div id="cartItemsList" class="mb-2">
+            <!-- Cart items will be injected here -->
+        </div>
+        <p class="font-bold">Total: <span id="cartTotalPrice">₱0.00</span></p>
+        <button class="mt-4 w-full bg-green-500 text-white py-2 rounded " id="btnSendRequest"
+        >Send Request</button>
+    </div>
+
 </div>
 
 
 
 
+ <!-- Modal -->
+ <div id="cartModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" style="display:none;">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <form id="frmAddTocart">
+        <h2 class="text-xl font-bold mb-4" id="asset_name">Shopping Cart</h2>
+        <div id="cartItems" class="mb-4">
 
-<!-- Modal for Create Request -->
-<div id="CreateRequestModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="display:none;">
-    <div class="bg-white rounded-lg shadow-lg w-[40rem] p-6"> 
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Create Request</h3>
-        <form id="createRequestFrm" >
-            
-            <!-- Spinner -->
-            <div class="spinner" id="spinner" style="display:none;">
-                <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-                    <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-            </div>
-
-            <input hidden type="text" id="add_user_id" name="add_user_id">
-            <div class="mb-4 relative">
-                <label for="search_user_fullname" class="block text-sm font-medium text-gray-700">Fullname</label>
-                <input type="text" id="search_user_fullname" name="user_fullname" class="w-full p-2 border rounded-md" required>
+            <input hidden type="text" id="add_id" name="add_id">
+          
+            <!-- <div class="relative mb-4" >
+                <input type="text" id="search_user_fullname" name="search_user_fullname" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="search_user_fullname" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Fullname</label>
                 <div id="employeeSuggestions" class="absolute left-0 bg-white border border-gray-300 rounded-md shadow-md w-full hidden mt-1 z-50"></div>
             </div>
 
 
-            <div class="mb-4">
-                <label for="add_user_generated_id" class="block text-sm font-medium text-gray-700">Employee ID</label>
-                <input readonly type="text" id="add_user_generated_id" name="user_generated_id" class="w-full p-2 border rounded-md" required>
+            <div class="relative mb-4" >
+                <input readonly type="text" id="add_user_id" name="add_user_id" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="add_user_id" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Employee ID</label>
             </div>
 
             <div class="mb-4">
                 <label for="add_user_designation" class="block text-sm font-medium text-gray-700">Office Designation</label>
                 <input readonly type="text" id="add_user_designation" name="user_designation" class="w-full p-2 border rounded-md" required>
+            </div> -->
+
+            <div class="relative mb-4" hidden>
+                <input type="text" id="asset_id" name="asset_id" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="asset_id" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Asset ID</label>
+            </div>
+
+           
+            <div class="relative mb-4">
+                <input type="text" id="qty" name="qty" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="qty" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Quantity</label>
             </div>
 
 
-            <div class="mb-4">
-    <label for="add_cat_assets_id" class="block text-sm font-medium text-gray-700">Assets</label>
-    <select name="cat_assets_id" id="add_cat_assets_id" class="w-full p-2 border rounded-md" required>
-        <option value="">Select Item</option>
-        <?php 
-        $fetch_all_assets = $db->fetch_all_assets();
-        if ($fetch_all_assets->num_rows > 0): 
-            while ($assets = $fetch_all_assets->fetch_assoc()): 
-            ?>
-                <option data-category_id="<?=$assets['category_id']?>" data-subcategory_id="<?=$assets['subcategory_id']?>" value="<?=$assets['id']?>">
-                    <?=$assets['name']?>
-                </option>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <option value="">No record found.</option>
-        <?php endif; ?>
-    </select>
-</div>
-
-<div class="mb-4">
-    <label for="add_category_item" class="block text-sm font-medium text-gray-700">Category Item</label>
-    <select name="category_item" id="add_category_item" class="w-full p-2 border rounded-md bg-gray-100" disabled required>
-        <option value="">Select Category</option>
-        <?php 
-        $fetch_all_category = $db->fetch_all_category();
-        if ($fetch_all_category->num_rows > 0): 
-            while ($category = $fetch_all_category->fetch_assoc()): 
-            ?>
-                <option value="<?=$category['id']?>"><?=$category['category_name']?></option>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <option value="">No record found.</option>
-        <?php endif; ?>
-    </select>
-</div>
-
-<div class="mb-4">
-    <label for="add_assets_subcategory" class="block text-sm font-medium text-gray-700">Subcategory</label>
-    <select name="assets_subcategory" id="add_assets_subcategory" class="w-full p-2 border rounded-md bg-gray-100" disabled required>
-        <option value="">Select Subcategory</option>
-        <?php 
-        $fetch_all_subcategory = $db->fetch_all_subcategory();
-        if ($fetch_all_subcategory->num_rows > 0): 
-            while ($subcategory = $fetch_all_subcategory->fetch_assoc()): 
-            ?>
-                <option data-category_id="<?=$subcategory['category_id']?>" value="<?=$subcategory['id']?>"><?=$subcategory['subcategory_name']?></option>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <option value="">No record found.</option>
-        <?php endif; ?>
-    </select>
-</div>
 
 
-        <div class="mb-4">
-                <label for="add_assets_quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input type="number" id="add_assets_quantity" name="assets_quantity" class="w-full p-2 border rounded-md" required>
+
+            
+
+            <div class="relative mb-4">
+                <input type="text" id="varietyName" hidden>
+                <select id="variety" name="variety" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <option value="" disabled selected hidden>--Select--</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                </select>
+                <label for="variety" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Variety</label>
             </div>
+        </div>
+        <button type="submit" id="BtnaddToCart" class="px-4 py-2 bg-green-500 text-white rounded">Add to cart</button>
+        <button type="button" id="closeCartModal" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
+        </form>
+    </div>
+</div>
+   
 
 
-            <div class="mb-4">
-                <label for="add_supplier_name" class="block text-sm font-medium text-gray-700">Supplier Name</label>
-                <input type="text" id="add_supplier_name" name="supplier_name" class="w-full p-2 border rounded-md" required>
-            </div>
+
+
+
+<!-- MODAL REQUEST SECION -->
+<div id="sendRequestModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="display:none;">
+    <div class="bg-white rounded-lg p-6 shadow-lg w-96">
+        <h2 class="text-xl font-bold text-gray-700 mb-4">Request Details</h2>
 
         
-            <div class="mb-4">
-                <label for="add_supplier_company" class="block text-sm font-medium text-gray-700">Supplier Company</label>
-                <input type="text" id="add_supplier_company" name="supplier_company" class="w-full p-2 border rounded-md" required>
+        
+        <div class="relative mb-4">
+                <input type="text" id="supplierName" name="supplierName" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="supplierName" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Supplier Name</label>
             </div>
 
-          
-
-            <div class="flex justify-end gap-2">
-                <button type="button" class="addUserModalClose bg-gray-500 hover:bg-gray-600 text-white py-1 px-3 rounded-md">Cancel Request</button>
-                <button id="btnCreateRequest" type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md">Submit Request</button>
+            <div class="relative mb-4">
+                <input type="text" id="supplierCompany" name="supplierCompany" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                <label for="supplierCompany" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Supplier Company</label>
             </div>
-        </form>
+
+
+
+
+        <div class="relative mb-4">
+                <select id="designation" name="designation" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                    <option value="" disabled selected hidden>--Select--</option>
+                    <option value="Finance's Office">Finance's Office</option>
+                    <option value="VPAA">VPAA</option>
+                    <option value="HRDO">HRDO</option>
+                    <option value="WASTFI">WASTFI</option>
+                    <option value="Library">Library</option>
+                    <option value="Computer Lab">Computer Lab</option>
+                </select>
+                <label for="designation" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 left-2 z-10 bg-white px-2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">Designation</label>
+            </div>
+
+        <div class="flex justify-end space-x-2">
+            <button id="confirmRequest" class="bg-green-500 text-white p-2 rounded-md">Confirm</button>
+            <button id="closeRequestModal" class="bg-gray-500 text-white p-2 rounded-md">Cancel</button>
+        </div>
     </div>
 </div>
 
 
 
+
 <script>
-
-
-
-
 $(document).ready(function () {
+
+
+
+let globalCartItems = []; // Store cart items globally
+
+function fetch_cart() {
+    $.ajax({
+        url: "backend/end-points/fetch_cart.php",
+        type: 'GET',
+        success: function (data) {
+            try {
+                globalCartItems = JSON.parse(data); // Store globally
+                
+                if (!Array.isArray(globalCartItems) || globalCartItems.length === 0) {
+                    $("#cartItemsList").html("<p>Your cart is empty.</p>");
+                    $("#cartTotalPrice").text("₱0.00");
+                    return;
+                }
+
+                let totalItems = 0;
+                let totalPrice = 0;
+                
+                let cartItemsHtml = globalCartItems.map((item, index) => {
+                let price = parseFloat(item.price) || 0;
+                let subtotal = price * (item.cart_qty || 0);
+                totalItems += item.cart_qty;
+                totalPrice += subtotal;
+                return `
+                    <div class="cart-item flex justify-between items-center p-4 border-b border-gray-300" id="cart-item-${item.cart_id}">
+                        <p class="text-sm text-gray-700">${item.name} (${item.cart_variety}) x${item.cart_qty} - ₱${subtotal.toFixed(2)}</p>
+                        <button class="remove-btn text-red-500 hover:text-red-700 focus:outline-none" data-cart_id="${item.cart_id}">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                `;
+
+            }).join("");
+
+                $("#cartItemsList").html(cartItemsHtml);
+                $("#cartTotalPrice").text(`₱${totalPrice.toFixed(2)}`);
+                
+                $(".remove-btn").on("click", function() {
+                    let cart_id = $(this).data("cart_id");
+                    remove_from_cart(cart_id);
+                });
+            } catch (error) {
+                console.error("Error parsing cart data:", error);
+                $("#cartItemsList").html("<p>Error loading cart items.</p>");
+            }
+        },
+    });
+}
+
+function remove_from_cart(cart_id) {
+    $.ajax({
+        url: "backend/end-points/controller.php",
+        type: 'POST',
+        data: { cart_id: cart_id, requestType: "remove_from_cart" },
+        dataType: 'json',
+        success: function (response) {
+            console.log(response);
+            if (response.status === 200) { 
+                location.reload();
+            } else {
+                console.error("Error removing item from cart");
+            }
+        },
+    });
+}
+
+
+setInterval(fetch_cart, 3000);
+fetch_cart();
+
+
+$("#confirmRequest").click(function () {
+    let supplierName = $("#supplierName").val().trim();
+    let supplierCompany = $("#supplierCompany").val().trim();
+    let designation = $("#designation").val();
+
+    if (!supplierName || !supplierCompany || !designation) {
+        alertify.error("Please fill in all the details before confirming.");
+        return;
+    }
+
+    if (globalCartItems.length === 0) {
+        alertify.error("Your cart is empty. Please add items before confirming.");
+        return;
+    }
+
+    // Create data object instead of FormData
+    let requestData = {
+        supplier_name: supplierName,
+        supplier_company: supplierCompany,
+        designation: designation,
+        requestType: "confirmRequest",
+        cart_items: globalCartItems // Pass as array
+    };
+
+    // Send data via AJAX without FormData
+    $.ajax({
+        url: "backend/end-points/controller.php",
+        type: "POST",
+        data: $.param(requestData), // Convert object to URL-encoded string
+        success: function (response) {
+          
+
+       
+                if (response.success) {
+                    alert("Request submitted successfully!");
+                    $("#sendRequestModal").hide();
+                    $("#cartItemsList").html("<p>Your cart is empty.</p>");
+                    $("#cartTotalPrice").text("₱0.00");
+                    globalCartItems = []; // Clear cart
+                } else {
+                    alert("Error: " + res.message);
+                }
+          
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+            alert("Failed to submit the request.");
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $("#btnSendRequest").click(function (e) { 
+        e.preventDefault();
+        $("#sendRequestModal").fadeIn();
+    });
+
+
+    $("#closeRequestModal").click(function() {
+            $("#sendRequestModal").fadeOut();
+        });
+
+        $("#sendRequestModal").click(function(event) {
+            if ($(event.target).is("#sendRequestModal")) {
+                $("#sendRequestModal").fadeOut();
+            }
+        });
+    // closeRequestModal
+
+    $(".togglerViewCart").click(function () {
+        let asset_id = $(this).data('asset_id');
+        let name = $(this).data('name');
+        let variety = $(this).data('variety'); // Expecting an object with name and values
+
+        $("#varietyName").val(variety.name);
+
+        console.log(variety);
+
+        if (variety && variety.name && Array.isArray(variety.values)) {
+            let selectElement = $("#variety");
+            selectElement.empty(); // Clear existing options
+            
+            // Add placeholder option
+            selectElement.append(`<option value="" disabled selected hidden>-- Select ${variety.name} --</option>`);
+
+            // Append variety values as options
+            variety.values.forEach(value => {
+                selectElement.append(`<option value="${value}">${value}</option>`);
+            });
+        }
+
+        $("#asset_id").val(asset_id);
+        $("#asset_name").text(name);
+        $("#cartModal").fadeIn();
+    });
+
+
+
+
+        $("#closeCartModal").click(function() {
+            $("#cartModal").fadeOut();
+        });
+
+        $("#cartModal").click(function(event) {
+            if ($(event.target).is("#cartModal")) {
+                $("#cartModal").fadeOut();
+            }
+        });
+
+
+        
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
    // Trigger change event when asset is selected
    $("#add_cat_assets_id").change(function () {
         // Get selected option's data attributes
@@ -261,7 +492,7 @@ $(document).ready(function () {
                 let suggestions = data.map(user => `
                     <div class='suggestion-item p-2 hover:bg-gray-200 cursor-pointer' 
                          data-id='${user.id}' 
-                         data-generated_id='${user.generated_id}' 
+                         data-user_id='${user.user_id}' 
                          data-designation='${user.designation}' 
                          data-fullname='${user.fullname}'>
                          ${user.fullname} - ${user.designation}
@@ -281,21 +512,22 @@ $(document).ready(function () {
 
 $("#search_user_fullname").on("input", function() {
     let query = $(this).val().trim(); // Trim whitespace
-    console.log("User Input:", query);
+    // console.log("User Input:", query);
     fetchSuggestions(query);
 });
 
 
 $(document).on("click", ".suggestion-item", function() {
     let id = $(this).data("id");
-    let generated_id = $(this).data("generated_id");
     let selectedfullname = $(this).data("fullname");
-    let selectedgenerated_id = $(this).data("generated_id");
-    let selecteddesignation = $(this).data("designation");
+    let selecteduser_id = $(this).data("user_id");
+    let selecteddesignation = $(this).data("designation");  
+
+    console.log(selecteduser_id);
 
     $("#search_user_fullname").val(selectedfullname);
-    $("#add_user_id").val(id);
-    $("#add_user_generated_id").val(selectedgenerated_id);
+    $("#add_id").val(id);
+    $("#add_user_id").val(selecteduser_id);
     $("#add_user_designation").val(selecteddesignation);
     $("#employeeSuggestions").hide();
 });
@@ -326,4 +558,4 @@ $(document).click(function(e) {
 
 
 
-<!-- <script src="assets/js/category_generated.js"></script> -->
+<script src="assets/js/filter_assets_category.js"></script>

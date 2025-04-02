@@ -231,6 +231,10 @@ function handleFileUpload($file, $uploadDir, $prefix) {
 }
 
 
+// echo "<pre>";
+// print_r($_POST);
+// echo "</pre>";
+
 $assets_image = $_FILES['assets_img'] ?? null;
 
 $assets_imageName = $assets_image ? handleFileUpload($assets_image, $uploadDir, "Assets") : null;
@@ -245,7 +249,6 @@ $assets_condition = htmlspecialchars(trim($_POST['assets_condition'] ?? ''));
 $assets_status = htmlspecialchars(trim($_POST['assets_status'] ?? ''));
 $assets_description = htmlspecialchars(trim($_POST['assets_description'] ?? ''));
 $assets_price = htmlspecialchars(trim($_POST['assets_price'] ?? ''));
-$assets_qty = htmlspecialchars(trim($_POST['assets_qty'] ?? ''));
 
 $assets_variety_name = htmlspecialchars(trim($_POST['assets_variety_name'] ?? ''));
 $assets_variety_values = isset($_POST['assets_variety_value']) ? $_POST['assets_variety_value'] : [];
@@ -259,6 +262,8 @@ if (!empty($assets_variety_name) && !empty($assets_variety_values)) {
     $variety_json = null;  
 }
 
+
+
 $result = $db->AddAssets(
     $assets_imageName,
     $assets_code,
@@ -270,7 +275,6 @@ $result = $db->AddAssets(
     $assets_status,
     $assets_description,
     $assets_price,
-    $assets_qty,
     $variety_json
 );
 
@@ -337,7 +341,6 @@ if ($result == "success") {
         $assets_status = htmlspecialchars(trim($_POST['assets_status']));
         $assets_description = htmlspecialchars(trim($_POST['assets_description']));
         $assets_price = htmlspecialchars(trim($_POST['assets_price']));
-        $assets_qty = htmlspecialchars(trim($_POST['assets_qty']));
     
 
         $assets_variety_name = htmlspecialchars(trim($_POST['assets_variety_name'] ?? ''));
@@ -354,7 +357,7 @@ if ($result == "success") {
 
 
 
-        $result = $db->UpdateAssets($assets_id,$assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price, $assets_qty,$variety_json);
+        $result = $db->UpdateAssets($assets_id,$assets_imageName, $assets_code, $assets_name,$assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status,$assets_description,$assets_price,$variety_json);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "Successfully Added"]);

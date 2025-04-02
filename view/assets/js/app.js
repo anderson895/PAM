@@ -10,7 +10,6 @@ $('.togglerUpdateAssets').click(function (e) {
     let subcategory_id = $(this).data('subcategory_id');
     let condition_status = $(this).data('condition_status');
     let office_id = $(this).data('office_id');
-    let quantity = $(this).data('quantity');
     let status = $(this).data('status');
     let variety = $(this).data('variety'); // This is the variety data, which might already be an object
 
@@ -30,7 +29,6 @@ $('.togglerUpdateAssets').click(function (e) {
     $("#update_assets_subcategory").val(subcategory_id);
     $("#update_assets_condition").val(condition_status);
     $("#update_assets_Office").val(office_id);
-    $("#update_assets_qty").val(quantity);
     $("#update_assets_status").val(status);
 
     // Display the variety name in the input field
@@ -384,8 +382,8 @@ $("#createRequestFrm").submit(function (e) {
         e.preventDefault();
   
       
-        // $('.spinner').show();
-        // $('#btnAddAssets').prop('disabled', true);
+        $('.spinner').show();
+        $('#btnAddAssets').prop('disabled', true);
     
         var formData = new FormData(this); 
         formData.append('requestType', 'AddAssets');

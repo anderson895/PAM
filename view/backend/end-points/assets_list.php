@@ -28,7 +28,6 @@
                         <td class="p-2"><?php echo htmlspecialchars($user['office_name']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['purchase_date']); ?></td>
                         <td class="p-2">₱<?php echo htmlspecialchars(number_format($user['price'],2)); ?></td>
-                        <td class="p-2"><?php echo htmlspecialchars($user['quantity']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['status']); ?></td>
 
                         <?php if (isset($On_Session[0]['role']) && $On_Session[0]['role'] == "Administrator") { ?>
@@ -42,7 +41,6 @@
                                     data-condition_status="<?= htmlspecialchars($user['condition_status']) ?>"
                                     data-office_id="<?= htmlspecialchars($user['office_id']) ?>"
                                     data-purchase_date="<?= htmlspecialchars($user['purchase_date']) ?>"
-                                    data-quantity="<?= htmlspecialchars($user['quantity']) ?>"
                                     data-status="<?= htmlspecialchars($user['status']) ?>"
                                     data-price="<?= htmlspecialchars($user['price']) ?>"
                                     data-description="<?= htmlspecialchars($user['description']) ?>"

@@ -76,30 +76,25 @@ class global_class extends db_connect
 
 
 
-    public function AddAssets($assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price, $assets_qty, $variety_json) {
+    public function AddAssets($assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price, $variety_json) {
     
-        // Check if the asset_code already exists
+       
         $checkAssetCode = $this->conn->prepare("SELECT asset_code FROM assets WHERE asset_code = ?");
-        $checkAssetCode->bind_param("s", $assets_code);  // Use passed $assets_code here instead of $_POST
+        $checkAssetCode->bind_param("s", $assets_code); 
         $checkAssetCode->execute();
         $checkAssetCodeResult = $checkAssetCode->get_result();
         
         if ($checkAssetCodeResult->num_rows > 0) {
-            // If asset_code already exists, return an error
-            echo json_encode(["status" => 400, "message" => "Asset code already exists. Please use a different code."]);
-            return;
+            return "Asset code already exists. Please use a different code.";
         }
-        
-        
-        // Proceed with inserting the asset if the code is unique
+
         $query = $this->conn->prepare(
-            "INSERT INTO `assets` (`asset_code`, `name`, `category_id`, `subcategory_id`, `office_id`, `price`, `condition_status`, `status`, `image`, `quantity`, `description`, `variety`) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO `assets` (`asset_code`, `name`, `category_id`, `subcategory_id`, `office_id`, `price`, `condition_status`, `status`, `image`, `description`, `variety`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         
-        // Bind parameters
         $query->bind_param(
-            "ssssssssssss", 
+            "sssssssssss", 
             $assets_code, 
             $assets_name, 
             $assets_category, 
@@ -108,17 +103,14 @@ class global_class extends db_connect
             $assets_price, 
             $assets_condition, 
             $assets_status, 
-            $assets_imageName, 
-            $assets_qty, 
+            $assets_imageName,
             $assets_description, 
             $variety_json  
         );
-        
-        // Execute the query and handle the response
         if ($query->execute()) {
-            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+            return 'success';
         } else {
-            echo json_encode(["status" => 400, "message" => "Error: " . $query->error]);
+            return 'Error: ' . $query->error;
         }
     }
     
@@ -127,17 +119,17 @@ class global_class extends db_connect
 
 
 
-    public function UpdateAssets($assets_id, $assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price, $assets_qty,$variety_json) {
+    public function UpdateAssets($assets_id, $assets_imageName, $assets_code, $assets_name, $assets_Office, $assets_category, $assets_subcategory, $assets_condition, $assets_status, $assets_description, $assets_price,$variety_json) {
         // Start base query
         $sql = "UPDATE `assets` 
                 SET `asset_code` = ?, `name` = ?, `category_id` = ?, `subcategory_id` = ?, `office_id` = ?, 
-                    `price` = ?, `condition_status` = ?, `status` = ?, `quantity` = ?, `description` = ?, `variety` = ?";
+                    `price` = ?, `condition_status` = ?, `status` = ?, `description` = ?, `variety` = ?";
     
         // Check if image is not empty, include in the query
         $params = [$assets_code, $assets_name, $assets_category, $assets_subcategory, $assets_Office, 
-                   $assets_price, $assets_condition, $assets_status, $assets_qty, $assets_description,$variety_json];
+                   $assets_price, $assets_condition, $assets_status, $assets_description,$variety_json];
         
-        $types = "sssssssssss";
+        $types = "ssssssssss";
     
         if (!empty($assets_imageName)) {
             $sql .= ", `image` = ?";

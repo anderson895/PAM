@@ -58,7 +58,6 @@
                     <th class="p-3">Office</th>
                     <th class="p-3">Purchase Date</th>
                     <th class="p-3">Price</th>
-                    <th class="p-3">Quantity</th>
                     <th class="p-3">Status</th>
                     
                     
@@ -112,7 +111,7 @@
             
             <div class="mb-4">
                 <label for="add_assets_description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="add_assets_description" name="assets_description" class="w-full p-2 border rounded-md" rows="2" required></textarea>
+                <textarea id="add_assets_description" name="assets_description" class="w-full p-2 border rounded-md" rows="2"></textarea>
             </div>
 
 
@@ -211,10 +210,7 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label for="assets_qty" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input type="number" id="add_assets_qty" name="assets_qty" class="w-full p-2 border rounded-md">
-            </div>
+           
 
 
             <div class="mb-4">
@@ -279,7 +275,7 @@
             
             <div class="mb-4">
                 <label for="update_assets_description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="update_assets_description" name="assets_description" class="w-full p-2 border rounded-md" rows="2" required></textarea>
+                <textarea id="update_assets_description" name="assets_description" class="w-full p-2 border rounded-md" rows="2"></textarea>
             </div>
 
 
@@ -378,10 +374,6 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label for="assets_qty" class="block text-sm font-medium text-gray-700">Quantity</label>
-                <input type="number" id="update_assets_qty" name="assets_qty" class="w-full p-2 border rounded-md">
-            </div>
 
           <!-- Variety Section in the Form -->
             <div class="mb-4">

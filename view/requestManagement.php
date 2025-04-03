@@ -121,9 +121,9 @@
                     <th class="p-3">Request Date</th>
                     <th class="p-3">Status</th>
 
-                    <?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
+                  
                     <th class="p-3 text-center">Actions</th>
-                    <?php } ?>
+                    
                     
                     
                    
@@ -362,17 +362,12 @@ $("#confirmRequest").click(function () {
         data: $.param(requestData), // Convert object to URL-encoded string
         success: function (response) {
           
-
-       
-                if (response.success) {
-                    alert("Request submitted successfully!");
+                    alertify.success("Request submitted successfully!");
                     $("#sendRequestModal").hide();
                     $("#cartItemsList").html("<p>Your cart is empty.</p>");
                     $("#cartTotalPrice").text("₱0.00");
                     globalCartItems = []; // Clear cart
-                } else {
-                    alert("Error: " + res.message);
-                }
+                
           
         },
         error: function (xhr, status, error) {

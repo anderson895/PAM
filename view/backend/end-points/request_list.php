@@ -24,9 +24,10 @@
                             <td class="p-2"><?php echo htmlspecialchars($user['request_date']); ?></td>
                             <td class="p-2"><?php echo htmlspecialchars($user['request_status']); ?></td>
                            
-                            <?php if (isset($On_Session[0]['role']) && $On_Session[0]['role'] == "Administrator") { ?>
+                         
                                 <td class="p-2 text-center">
                                     <div class="flex items-center justify-center space-x-2">
+                                    <?php if (isset($On_Session[0]['role']) && $On_Session[0]['role'] == "Administrator") { ?>
                                         <select class="togglerRequest bg-blue-500 text-white py-1 px-3 rounded-md"
                                                 data-request_id="<?= htmlspecialchars($user['request_id']) ?>"
                                                 aria-label="Select User Status">
@@ -49,7 +50,7 @@
                                                 <option value="Decline" class="text-red-500" <?= $user['request_status'] == 'Decline' ? 'selected' : '' ?>>Decline</option>
                                             <?php } ?>
                                         </select>
-
+                                        <?php } ?>
                                         <!-- View Button -->
                                         <a href="procurement_receipt.php?request_id=<?= $user['request_id'] ?>">
                                             <button class="bg-gray-500 text-white py-1 px-3 rounded-md">
@@ -59,7 +60,7 @@
                                     </div>
                                 </td>
 
-                            <?php } ?>
+                           
 
 
 

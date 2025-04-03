@@ -236,8 +236,8 @@ class global_class extends db_connect
     
         if ($result->num_rows > 0) {
             // Item exists, update the quantity
-            $updateQuery = $this->conn->prepare("UPDATE request_cart SET cart_qty = cart_qty + $qty WHERE cart_user_id = ? AND cart_asset_id = ?");
-            $updateQuery->bind_param("ii", $add_id, $asset_id);
+            $updateQuery = $this->conn->prepare("UPDATE request_cart SET cart_qty = cart_qty + $qty WHERE cart_user_id = ? AND cart_asset_id = ? AND cart_variety = ?");
+            $updateQuery->bind_param("iis", $add_id, $asset_id,$variety);
             return $updateQuery->execute();
         } else {
             // Item does not exist, insert a new row

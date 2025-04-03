@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2025 at 07:53 AM
+-- Generation Time: Apr 03, 2025 at 11:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,29 +34,24 @@ CREATE TABLE `assets` (
   `category_id` int(11) DEFAULT NULL,
   `subcategory_id` int(11) DEFAULT NULL,
   `office_id` int(11) DEFAULT NULL,
-  `purchase_date` date NOT NULL,
+  `purchase_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `price` decimal(10,2) NOT NULL,
   `condition_status` enum('New','Good','Needs Repair','Damaged') DEFAULT 'New',
   `status` enum('Available','Assigned','Under Maintenance','Disposed') DEFAULT 'Available',
   `image` varchar(255) DEFAULT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `description` text DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `variety` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `assets`
 --
 
-INSERT INTO `assets` (`id`, `asset_code`, `name`, `category_id`, `subcategory_id`, `office_id`, `purchase_date`, `price`, `condition_status`, `status`, `image`, `quantity`, `description`) VALUES
-(95, 'IT - 01', 'Asus', 2, 38, 19, '2025-03-17', 50000.00, 'Good', 'Available', 'Assets_67de2e1828daf.webp', 3, 'for IT dept'),
-(96, 'IT - 02', 'Epson', 2, 38, 18, '2025-03-18', 10000.00, 'Good', 'Available', 'Profile_67dd4a6f3130b.png', 0, 'For Registrar Office.....'),
-(97, 'IT - 03', 'Electricafan', 3, 34, 15, '2025-03-19', 2000.00, 'Good', 'Assigned', 'Profile_67dd4a6f3130b.png', 1, 'Needed for IT Dept'),
-(99, 'IT - 04', 'Electricfan', 1, 38, 15, '2025-03-19', 1200.00, 'Good', 'Available', NULL, 1, 'Needed for IT Dept'),
-(101, 'ASSET123', 'assets1', 2, 34, 15, '0000-00-00', 1000.00, '', 'Available', NULL, 100, 'wadwadaw'),
-(102, 'awdwad', 'awd', 3, 37, 13, '0000-00-00', 12.00, 'Good', 'Available', NULL, 20, 'awwa'),
-(103, 'test', 'fesfse', 2, 31, 14, '0000-00-00', 34.00, '', 'Under Maintenance', NULL, 12, 'rdgrd'),
-(104, 'awdaw', 'esfse', 2, 32, 13, '0000-00-00', 0.00, 'Damaged', 'Available', NULL, 2, 'rdg'),
-(105, '0001', 'medicine', 2, 33, 15, '0000-00-00', 100.00, 'Good', 'Available', 'Assets_67de52fd58a19.webp', 90, 'awwadawd');
+INSERT INTO `assets` (`id`, `asset_code`, `name`, `category_id`, `subcategory_id`, `office_id`, `purchase_date`, `price`, `condition_status`, `status`, `image`, `description`, `variety`) VALUES
+(126, '000001', 'pencil', 3, 37, 12, '2025-04-02 03:29:52', 12.00, 'New', 'Available', 'Assets_67ecaf21806be.webp', 'cfnfcfch', '{\"name\":\"brand\",\"values\":[\"mongol 1\"]}'),
+(127, '000002', 'scissor', 3, 37, 12, '2025-04-02 03:33:31', 30.00, 'New', 'Available', 'Assets_67ecb00b3b26a.jpg', 'aawd', '{\"name\":\"color\",\"values\":[\"red\",\"green\",\"blue\"]}'),
+(128, '000003', 'eraser', 3, 37, 12, '2025-04-02 03:43:15', 30.00, 'New', 'Available', 'Assets_67ecb25354a75.jpg', '', '{\"name\":\"shape\",\"values\":[\"triangle\",\"square\",\"circle\"]}'),
+(129, '000004', 'laptop', 2, 31, 15, '2025-04-02 14:54:51', 500.00, 'New', 'Available', 'Assets_67ed4fbbd3c45.webp', '', '{\"name\":\"brand\",\"values\":[\"hp\",\"lenovo\",\"samsung\"]}');
 
 -- --------------------------------------------------------
 
@@ -111,16 +106,40 @@ INSERT INTO `offices` (`id`, `office_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `recieved_logs`
+--
+
+CREATE TABLE `recieved_logs` (
+  `recieved_id` int(11) NOT NULL,
+  `recieved_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `recieved_supplier_name` varchar(60) NOT NULL,
+  `recieved_supplier_company` varchar(60) NOT NULL,
+  `recieved_assets_name` varchar(60) NOT NULL,
+  `recieved_description` text NOT NULL,
+  `recieved_assets_qty` int(11) NOT NULL,
+  `recieved_user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `recieved_logs`
+--
+
+INSERT INTO `recieved_logs` (`recieved_id`, `recieved_date`, `recieved_supplier_name`, `recieved_supplier_company`, `recieved_assets_name`, `recieved_description`, `recieved_assets_qty`, `recieved_user_id`) VALUES
+(1, '2025-04-03 08:32:42', 'j supplies', 'j company', 'Scissors', 'pang gupit', 30, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `request`
 --
 
 CREATE TABLE `request` (
   `request_id` int(11) NOT NULL,
+  `request_invoice` varchar(60) NOT NULL,
   `request_user_id` int(11) NOT NULL,
-  `request_assets_id` int(11) NOT NULL,
-  `request_qty` int(11) NOT NULL,
   `request_supplier_name` varchar(60) NOT NULL,
   `request_supplier_company` varchar(60) NOT NULL,
+  `request_designation` varchar(60) NOT NULL,
   `request_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `request_status` varchar(60) NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -129,11 +148,62 @@ CREATE TABLE `request` (
 -- Dumping data for table `request`
 --
 
-INSERT INTO `request` (`request_id`, `request_user_id`, `request_assets_id`, `request_qty`, `request_supplier_name`, `request_supplier_company`, `request_date`, `request_status`) VALUES
-(4, 80136, 95, 3, 'joshua', 'com', '2025-03-22 04:40:20', 'Delivered'),
-(5, 80136, 95, 5, 'sefes', 'esf', '2025-03-22 04:44:49', 'Pending'),
-(6, 80136, 105, 10, 'j supply', 'j company', '2025-03-22 06:09:39', 'Delivered'),
-(7, 1, 96, 1, 'j supply', 'j com', '2025-03-22 06:39:49', 'Delivered');
+INSERT INTO `request` (`request_id`, `request_invoice`, `request_user_id`, `request_supplier_name`, `request_supplier_company`, `request_designation`, `request_date`, `request_status`) VALUES
+(16, 'REQ-17435944699126', 1, 'j supply', 'j company', 'Library', '2025-04-03 08:33:09', 'Pending'),
+(17, 'REQ-17436060249325', 80141, 'j supply', 'jcom', 'Computer Lab', '2025-04-03 08:34:38', 'Delivered'),
+(18, 'REQ-17436721805447', 80141, 'j supply', 'j com', 'HRDO', '2025-04-03 09:23:00', 'pending'),
+(19, 'REQ-17436722272526', 80141, 'j supply', 'j com', 'VPAA', '2025-04-03 09:23:47', 'pending'),
+(20, 'REQ-17436723338441', 80141, 'j supply', 'j com', 'VPAA', '2025-04-03 09:25:33', 'pending'),
+(21, 'REQ-17436724223866', 80141, 'j supply', 'j com', 'VPAA', '2025-04-03 09:27:02', 'pending');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request_cart`
+--
+
+CREATE TABLE `request_cart` (
+  `cart_id` int(11) NOT NULL,
+  `cart_user_id` int(11) NOT NULL,
+  `cart_asset_id` int(11) NOT NULL,
+  `cart_qty` int(11) NOT NULL,
+  `cart_variety` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request_item`
+--
+
+CREATE TABLE `request_item` (
+  `r_item_id` int(11) NOT NULL,
+  `r_request_id` int(11) NOT NULL,
+  `r_item_asset_id` int(11) NOT NULL,
+  `r_item_qty` int(11) NOT NULL,
+  `r_item_variety` varchar(60) NOT NULL,
+  `r_item_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `request_item`
+--
+
+INSERT INTO `request_item` (`r_item_id`, `r_request_id`, `r_item_asset_id`, `r_item_qty`, `r_item_variety`, `r_item_price`) VALUES
+(3, 16, 126, 13, 'Mongol 1', 12.00),
+(4, 16, 127, 1, 'Green', 30.00),
+(5, 17, 127, 2, 'Green', 30.00),
+(6, 17, 129, 1, 'Samsung', 500.00),
+(7, 18, 126, 10, 'Mongol 1', 12.00),
+(8, 18, 128, 3, 'Circle', 30.00),
+(9, 18, 128, 6, 'Square', 30.00),
+(10, 18, 128, 1, 'Triangle', 30.00),
+(11, 19, 127, 1, 'Green', 30.00),
+(12, 20, 128, 1, 'Square', 30.00),
+(13, 20, 127, 3, 'Green', 30.00),
+(14, 20, 129, 1, 'Lenovo', 500.00),
+(15, 21, 127, 5, 'Green', 30.00),
+(16, 21, 128, 1, 'Square', 30.00);
 
 -- --------------------------------------------------------
 
@@ -195,7 +265,7 @@ CREATE TABLE `system_maintenance` (
 --
 
 INSERT INTO `system_maintenance` (`system_id`, `system_name`, `system_image`) VALUES
-(1, 'test', 'Assets_67de5e3f36f55.jpg');
+(1, 'PAM', 'Assets_67de5e3f36f55.jpg');
 
 -- --------------------------------------------------------
 
@@ -205,7 +275,7 @@ INSERT INTO `system_maintenance` (`system_id`, `system_name`, `system_image`) VA
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `generated_id` int(11) NOT NULL,
+  `user_id` varchar(60) NOT NULL,
   `email` varchar(60) NOT NULL,
   `password` varchar(255) NOT NULL,
   `fullname` varchar(60) NOT NULL,
@@ -213,7 +283,6 @@ CREATE TABLE `users` (
   `role` varchar(60) NOT NULL,
   `designation` varchar(60) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
-  `employee_id_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=deleted,1=exist'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -222,12 +291,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `generated_id`, `email`, `password`, `fullname`, `nickname`, `role`, `designation`, `profile_picture`, `employee_id_picture`, `created_at`, `status`) VALUES
-(1, 85623, 'admin@gmail.com', '$2y$10$kbDGD4CzxKZN5dRpp0eoV.azp7.yNniWsyPwb7jQ/QRoCeoZslw82', 'Juan Dela Cruz', 'admin', 'Administrator', 'Computer Lab', 'Profile_67dd240ef2143.jpeg', NULL, '2025-03-22 05:00:22', 1),
-(80134, 99477, 'andersonandy046@gmail.com', '$2y$10$DV242aq/jwR52Oq3EqepquWdcrpeEm77Lx/H2gPK7.fnCBnctmYM6', 'joshua padilla', 'andy', 'IACEPO', 'Computer Lab', 'Profile_67dd24b38b323.jpg', NULL, '2025-03-21 08:40:20', 0),
-(80135, 48318, 'test@gmail.com', '$2y$10$KwMB1QfMMh9nJ0XlHcmLd.6wa4gEzlF1NpErxPbdREPd25tCsSFNG', 'test', 'test', 'Administrator', 'Registrar\'s Office', NULL, NULL, '2025-03-21 10:40:24', 0),
-(80136, 85680, 'andersonandy046@gmail.com', '$2y$10$IHFeoD1o8f1G7lUhz4RmAOi.3zLkC9be.SAYFOn.hxADCYk..VKWi', 'joshua padilla', 'andy', 'Finance', 'Computer Lab', 'Profile_67dd423a5a9b9.jpg', 'ID_67dd423a5ad43.jpg', '2025-03-21 10:40:58', 1),
-(80137, 97335, 'johndoe@gmail.com', '$2y$10$5NrC05I.8PafkEAJfFxrgez53J/zxOTDMj.TcGRRbnl0XIr1TcHnG', 'john doe', 'doe', 'Finance', 'Finance\'s Office', 'Profile_67dd4a6f3130b.png', NULL, '2025-03-21 11:16:14', 0);
+INSERT INTO `users` (`id`, `user_id`, `email`, `password`, `fullname`, `nickname`, `role`, `designation`, `profile_picture`, `created_at`, `status`) VALUES
+(1, '85623', 'admin@gmail.com', '$2y$10$kbDGD4CzxKZN5dRpp0eoV.azp7.yNniWsyPwb7jQ/QRoCeoZslw82', 'Juan Dela Cruz', 'admin', 'Administrator', 'Computer Lab', 'Profile_67dd240ef2143.jpeg', '2025-03-22 05:00:22', 1),
+(80138, '000001', 'andersonandy@gmail.com', '$2y$10$fzfuF1upMoglgqkEDKi.TuixFOINa9pc77PRJhbp/Fgymw4NidXsm', 'joshua padilla', 'andy', 'Finance', 'Registrar\'s Office', 'Profile_67ebdf948c3c2.webp', '2025-04-01 12:49:22', 1),
+(80139, '8888888', 'juan@gmail.com', '$2y$10$52e/tl0yPplDEA7SFuT7MuII2.1jhzTpfSh8tB2.JZCUhqJTtoXmu', 'juan', 'juan', 'Finance', 'VPAA', 'Profile_67ebe1e2b2142.jpeg', '2025-04-01 12:53:54', 1),
+(80140, '99999', 'alucard@gmail.com', '$2y$10$ANwZ3KWOPgjomLNQBGX02OuG/LpmIKYPj91TbXziAE2fFezBtB8ni', 'alucard', 'calu', 'Office Heads', 'Registrar\'s Office', NULL, '2025-04-01 12:59:23', 1),
+(80141, '56454564', 'layla@gmail.com', '$2y$10$FatWpQPFn6oQGZrc0yQa8eybcqUvlYHlv/UbAZaCYwYmrQvsx9j.i', 'layla', 'layla', 'Finance', 'Registrar\'s Office', NULL, '2025-04-01 13:01:26', 1);
 
 --
 -- Indexes for dumped tables
@@ -256,10 +325,28 @@ ALTER TABLE `offices`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `recieved_logs`
+--
+ALTER TABLE `recieved_logs`
+  ADD PRIMARY KEY (`recieved_id`);
+
+--
 -- Indexes for table `request`
 --
 ALTER TABLE `request`
   ADD PRIMARY KEY (`request_id`);
+
+--
+-- Indexes for table `request_cart`
+--
+ALTER TABLE `request_cart`
+  ADD PRIMARY KEY (`cart_id`);
+
+--
+-- Indexes for table `request_item`
+--
+ALTER TABLE `request_item`
+  ADD PRIMARY KEY (`r_item_id`);
 
 --
 -- Indexes for table `subcategories`
@@ -288,7 +375,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `assets`
 --
 ALTER TABLE `assets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -303,10 +390,28 @@ ALTER TABLE `offices`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT for table `recieved_logs`
+--
+ALTER TABLE `recieved_logs`
+  MODIFY `recieved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `request_cart`
+--
+ALTER TABLE `request_cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT for table `request_item`
+--
+ALTER TABLE `request_item`
+  MODIFY `r_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `subcategories`
@@ -324,7 +429,7 @@ ALTER TABLE `system_maintenance`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80138;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80142;
 
 --
 -- Constraints for dumped tables

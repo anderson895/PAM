@@ -449,12 +449,6 @@ if ($result == "success") {
         }
 
     }else if($_POST['requestType'] =='confirmRequest'){
-
-        // echo "<pre>";
-        // print_r($_POST);
-        // echo "</pre>";
-
-
         session_start();
         $add_id = intval($_SESSION['id']);
         $supplier_name = $_POST['supplier_name'];
@@ -502,11 +496,48 @@ if ($result == "success") {
     }else if($_POST['requestType'] =='remove_from_cart'){
 
 
-        session_start();
         $cart_id = $_POST['cart_id'];
 
       
         $result = $db->remove_from_cart($cart_id);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
+    }else if($_POST['requestType'] =='recordLogs'){
+
+
+        session_start();
+        $received_by = intval($_SESSION['id']);
+        $asset_name = $_POST['asset_name'];
+        $asset_description = $_POST['asset_description'];
+        $asset_supplier_name = $_POST['asset_supplier_name'];
+        $asset_supplier_company = $_POST['asset_supplier_company'];
+        $asset_qty = $_POST['asset_qty'];
+      
+        $result = $db->recordLogs($received_by,$asset_name,$asset_description,$asset_supplier_name,$asset_supplier_company,$asset_qty);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successfully Added"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
+    }else if($_POST['requestType'] =='updateLogs'){
+
+        session_start();
+        $received_by = intval($_SESSION['id']);
+        $log_id = $_POST['update_log_id'];
+        $asset_name = $_POST['update_asset_name'];
+        $asset_description = $_POST['update_asset_description'];
+        $asset_supplier_name = $_POST['update_asset_supplier_name'];
+        $asset_supplier_company = $_POST['update_asset_supplier_company'];
+        $asset_qty = $_POST['update_asset_qty'];
+      
+        $result = $db->updateLogs($log_id,$received_by,$asset_name,$asset_description,$asset_supplier_name,$asset_supplier_company,$asset_qty);
 
         if ($result == "success") {
             echo json_encode(["status" => 200, "message" => "Successfully Added"]);

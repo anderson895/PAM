@@ -25,7 +25,6 @@
                         <td class="p-2"><?php echo htmlspecialchars($user['office_name']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['purchase_date']); ?></td>
                         <td class="p-2">₱<?php echo htmlspecialchars(number_format($user['price'],2)); ?></td>
-                        <td class="p-2"><?php echo htmlspecialchars($user['quantity']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['status']); ?></td>
 
                        

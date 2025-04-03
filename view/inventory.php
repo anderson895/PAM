@@ -52,7 +52,6 @@
                     <th class="p-3">Office</th>
                     <th class="p-3">Purchase Date</th>
                     <th class="p-3">Price</th>
-                    <th class="p-3">Quantity</th>
                     <th class="p-3">Status</th>
                     
                     

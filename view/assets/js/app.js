@@ -1,4 +1,121 @@
 
+// Close modal functionality
+$('.togglerUpdateRecieved').click(function () {
+    let recieved_id = $(this).data('recieved_id');
+    let recieved_assets_name = $(this).data('recieved_assets_name');
+    let recieved_description = $(this).data('recieved_description');
+    let recieved_supplier_name = $(this).data('recieved_supplier_name');
+    let recieved_supplier_company = $(this).data('recieved_supplier_company');
+    let recieved_assets_qty = $(this).data('recieved_assets_qty');
+
+    $("#update_log_id").val(recieved_id);
+    $("#update_asset_name").val(recieved_assets_name);
+    $("#update_asset_description").val(recieved_description);
+    $("#update_asset_supplier_name").val(recieved_supplier_name);
+    $("#update_asset_supplier_company").val(recieved_supplier_company);
+    $("#update_asset_qty").val(recieved_assets_qty);
+    $('#updateLogsModal').fadeIn();
+});
+
+
+$('.updateLogsModalClose').click(function (e) { 
+    e.preventDefault();
+    $('#updateLogsModal').fadeOut();
+});  
+
+   // Close Modal when clicking outside the modal content
+$("#updateLogsModal").click(function(event) {
+        if ($(event.target).is("#updateLogsModal")) {
+            $("#updateLogsModal").fadeOut();
+        }
+});
+
+
+
+$("#updateLogsFrm").submit(function (e) {
+    e.preventDefault();
+    $('.spinner').show();
+    $('#btnUpdateLogs').prop('disabled', true);
+
+    var formData = new FormData(this); 
+    formData.append('requestType', 'updateLogs');
+    $.ajax({
+        type: "POST",
+        url: "backend/end-points/controller.php",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: "json", // Expect JSON response
+        beforeSend: function () {
+            $("#submitBtn").prop("disabled", true).text("Processing...");
+        },
+        success: function (response) {
+            console.log(response); // Debugging
+            
+            if (response.status === 200) {
+                alertify.success(response.message);
+                setTimeout(function () { location.reload(); }, 1000);
+            } else {
+                $('.spinner').hide();
+                $('#btnUpdateLogs').prop('disabled', false);
+                alertify.error(response.message);
+            }
+        },
+        complete: function () {
+            $("#submitBtn").prop("disabled", false).text("Submit");
+        }
+    });
+});
+
+
+
+
+$("#recordLogsFrm").submit(function (e) {
+    e.preventDefault();
+    $('.spinner').show();
+    $('#btnRecordLogs').prop('disabled', true);
+
+    var formData = new FormData(this); 
+    formData.append('requestType', 'recordLogs');
+    $.ajax({
+        type: "POST",
+        url: "backend/end-points/controller.php",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: "json", // Expect JSON response
+        beforeSend: function () {
+            $("#submitBtn").prop("disabled", true).text("Processing...");
+        },
+        success: function (response) {
+            console.log(response); // Debugging
+            
+            if (response.status === 200) {
+                alertify.success(response.message);
+                setTimeout(function () { location.reload(); }, 1000);
+            } else {
+                $('.spinner').hide();
+                $('#btnRecordLogs').prop('disabled', false);
+                alertify.error(response.message);
+            }
+        },
+        complete: function () {
+            $("#submitBtn").prop("disabled", false).text("Submit");
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -126,8 +243,6 @@ $('.add-variety-value').on('click', function() {
 $('.updateUserModalClose').click(function () {
     $('#updateAssetsModal').fadeOut();
 });
-
-
 
 
   $('.addUserModalClose').click(function (e) { 
@@ -282,9 +397,6 @@ $("#frmAddTocart").submit(function (e) {
             alertify.error(`Select ${capitalizedVarietyName} is required`);
             return;
         }
-
-
-        
         
         $('#BtnaddToCart').prop('disabled', true);
     
@@ -400,8 +512,6 @@ $("#frmAddTocart").submit(function (e) {
 
     $("#addAssetFrm").submit(function (e) {
         e.preventDefault();
-  
-      
         $('.spinner').show();
         $('#btnAddAssets').prop('disabled', true);
     
@@ -642,6 +752,7 @@ $(document).on('change', '.togglerRequest', function(e) {
     e.preventDefault();
     
     var request_id = $(this).data('request_id');
+    console.log(request_id);
     var action = $(this).val(); // Get action type (Approve/Decline)
     
     // Modify your confirmation text and success message based on the selected action

@@ -98,6 +98,54 @@
 
 
 
+
+
+
+
+<!-- User Table Card -->
+<div class="bg-white rounded-lg shadow-lg p-6 mb-6 mt-6">
+
+
+    <!-- Table Wrapper for Responsiveness -->
+    <div class="overflow-x-auto">
+        <table id="userTable" class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                   
+                    <th class="p-3">#</th>
+                    <th class="p-3">Invoice</th>
+                    <th class="p-3">Request By</th>
+                    <th class="p-3">Supplier Name</th>
+                   
+                    <th class="p-3">Designation</th>
+                    <th class="p-3">Request Date</th>
+                    <th class="p-3">Status</th>
+
+                    <?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
+                    <th class="p-3 text-center">Actions</th>
+                    <?php } ?>
+                    
+                    
+                   
+                </tr>
+            </thead>
+            <tbody>
+            <?php include "backend/end-points/request_list.php"; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
  <!-- Modal -->
  <div id="cartModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" style="display:none;">
     <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">

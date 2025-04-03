@@ -15,6 +15,8 @@ if (isset($_SESSION['id'])) {
 //    echo "<pre>";
 //    print_r($On_Session);
 //    echo "</pre>";
+ 
+ 
   
     // if (!empty($On_Session)) {
     //     if($_SESSION['role']!="Administrator"){
@@ -97,6 +99,8 @@ if (isset($_SESSION['id'])) {
 
 <?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
 
+
+    
     <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <div class="flex items-center space-x-3">
             <span class="material-icons">work</span>
@@ -105,6 +109,7 @@ if (isset($_SESSION['id'])) {
         <span class="material-icons">expand_more</span>
     </button>
     <div id="assetsDropdown" class="ml-8 space-y-2 hidden">
+        <a href="receive_logs" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Receive Logs</a>
         <a href="manage_assets" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Assets</a>
         <a href="inventory" class="block text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
     </div>

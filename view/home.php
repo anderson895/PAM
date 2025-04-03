@@ -1,7 +1,13 @@
 
 
 
-<?php include "components/header.php";?>
+<?php 
+include "components/header.php";
+
+if($On_Session[0]['role']!="Administrator"){
+   echo "<script>window.location.href = 'requestManagement';</script>";
+}
+?>
 
 <!-- Top bar with user profile -->
 <div class="flex justify-between items-center bg-white p-4 mb-6 rounded-md shadow-md">

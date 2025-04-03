@@ -48,6 +48,7 @@
             <thead class="bg-gray-100 text-gray-700">
                 <tr>
                     <th class="p-3">#</th>
+                    <th class="p-3">QRcode</th>
                     <th class="p-3">Image</th>
                     <th class="p-3">Asset ID</th>
                     <th class="p-3">Name</th>

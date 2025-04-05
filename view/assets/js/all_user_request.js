@@ -18,7 +18,7 @@ $(document).ready(function () {
                 },
                 labels: labels,
                 title: {
-                    text: 'All Delivered Requests (Pie Chart)',
+                    text: 'All Requests (Pie Chart)',
                     align: 'center'
                 },
                 colors: ['#80000f', '#cc000f', '#ff3333', '#ff6666', '#ff9999', '#ffcccc']

@@ -132,6 +132,10 @@ if (isset($_SESSION['id'])) {
 
 <?php } ?> 
 
+    <a href="settings" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
+        <span class="material-icons">settings</span>
+        <span>Account Settings</span>
+    </a>
 
   
         <button class="btnLogout flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-red-500 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">

@@ -558,6 +558,25 @@ if ($result == "success") {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
+    }else if($_POST['requestType'] =='UpdatePassword'){
+
+        session_start();
+        // echo "<pre>";
+        // print_r($_SESSION);
+        // echo "</pre>";
+
+        $user_id = $_SESSION['id'];
+        $password = $_POST['password'];
+       
+      
+        $result = $db->UpdatePassword($user_id,$password);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Update Successfully"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
     }else{
 
         echo "<pre>";

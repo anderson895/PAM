@@ -583,9 +583,6 @@ class global_class extends db_connect
     }
     
     
-
-
-
     public function Adduser($userId,$user_imageName, $user_fullname, $user_nickname, $user_email, $user_type, $user_password, $user_designation) {
        
         $hashed_password = password_hash($user_password, PASSWORD_DEFAULT);
@@ -603,6 +600,33 @@ class global_class extends db_connect
             return $error;
         }
     }
+
+
+    public function UpdatePassword($user_id, $password) {
+        // Hash the password
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+        // Update password in the database
+        $sql = "UPDATE users SET password = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            return 'Error in preparing statement: ' . $this->conn->error;
+        }
+    
+        $stmt->bind_param("ss", $hashed_password, $user_id);
+    
+        if ($stmt->execute()) {
+            if ($stmt->affected_rows > 0) {
+                $stmt->close();
+                return 'success';
+            } else {
+                $stmt->close();
+                return 'No rows updated  user_id might not exist or password is the same.';
+            }
+        }
+        
+    }
+    
 
 
 

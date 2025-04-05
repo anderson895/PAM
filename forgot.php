@@ -35,9 +35,11 @@ $maintenance = $db->fetch_maintenance();
             </div>
 
     <!-- Logo -->
+     <a href="index">
     <div class="flex justify-center mb-5 sm:mb-6">
       <img src="assets/logo/<?=$maintenance['system_image']?>" alt="" class="w-20 h-20 sm:w-24 sm:h-24 object-contain rounded-full shadow-md">
     </div>
+    </a>
 
     <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-5"><?=$maintenance['system_name']?></h2>
 
@@ -47,7 +49,7 @@ $maintenance = $db->fetch_maintenance();
         <input type="email" id="email" name="email" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-red-500" required>
       </div>
 
-      <button type="submit" id="btnForgotPassword" class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75">
+      <button type="submit" id="btnForgotPassword" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-800 hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition duration-200">
         Request New Password
       </button>
     </form>

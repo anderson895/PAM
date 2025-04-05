@@ -1,4 +1,54 @@
 
+
+$("#frmUpdatePassword").submit(function (e) {
+    e.preventDefault();
+    $('.spinner').show();
+
+    var formData = new FormData(this); 
+    formData.append('requestType', 'UpdatePassword');
+    $.ajax({
+        type: "POST",
+        url: "backend/end-points/controller.php",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: "json", // Expect JSON response
+        beforeSend: function () {
+            $("#submitBtn").prop("disabled", true).text("Processing...");
+        },
+        success: function (response) {
+            console.log(response); // Debugging
+            
+            if (response.status === 200) {
+                alertify.success(response.message);
+                setTimeout(function () { location.reload(); }, 1000);
+            } else {
+                $('.spinner').hide();
+                alertify.error(response.message);
+            }
+        },
+        complete: function () {
+            $("#submitBtn").prop("disabled", false).text("Submit");
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Close modal functionality
 $('.togglerUpdateRecieved').click(function () {
     let recieved_id = $(this).data('recieved_id');

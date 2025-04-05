@@ -3,6 +3,27 @@
 $("#frmUpdatePassword").submit(function (e) {
     e.preventDefault();
     $('.spinner').show();
+    
+    let password = $("#password").val();
+    let cpassword = $("#cpassword").val();
+
+    // Check for empty fields
+    if (!password || !cpassword) {
+        alertify.error("Password fields cannot be empty!");
+
+        $('.spinner').hide();
+        return;
+    }
+
+    // Check if passwords match
+    if (password !== cpassword) {
+        alertify.error("Passwords do not match!");
+
+        $('.spinner').hide();
+        return;
+    }
+
+    
 
     var formData = new FormData(this); 
     formData.append('requestType', 'UpdatePassword');

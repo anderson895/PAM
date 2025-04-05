@@ -94,9 +94,11 @@ if (isset($_SESSION['id'])) {
     <a href="requestManagement" class="flex items-center lg:justify-start space-x-3 text-gray-200 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">shopping_cart</span>
         <span>Procurements</span>
-        <span id="TotalPending" class="bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center ">
+        <?php if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){ ?>
+        <span id="PendingCounts" class="bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center ">
             0
         </span>
+        <?php } ?>   
     </a>
 
 

@@ -6,15 +6,15 @@ $(document).ready(function () {
           type: 'GET',
           dataType: 'json',
           success: function(response) {
-              console.log(response.pendingCount);
+              console.log(response.PendingCounts);
     
-              let TotalPending = response.TotalPending;
-              $('#TotalPending').text(TotalPending);
+              let PendingCounts = response.PendingCounts;
+              $('#PendingCounts').text(PendingCounts);
     
-              if (unseenCount > 0) {
-                $('#TotalPending').show();
+              if (PendingCounts > 0) {
+                $('#PendingCounts').show();
             } else {
-                $('#TotalPending').hide();
+                $('#PendingCounts').hide();
             }
        
               

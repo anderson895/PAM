@@ -57,10 +57,12 @@
                                                 View
                                             </button>
                                         </a>
+                                        <?php if (isset($On_Session[0]['role']) && $On_Session[0]['role'] == "Administrator") { ?>
                                         <button class="bg-gray-500 text-white py-1 px-3 rounded-md btnArchive"
                                         data-request_id="<?= htmlspecialchars($user['request_id']) ?>">
                                                 Archive
                                         </button>
+                                        <?php } ?>
                                     </div>
                                 </td>
 

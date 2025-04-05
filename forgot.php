@@ -30,7 +30,7 @@ $maintenance = $db->fetch_maintenance();
      <!-- Spinner -->
      <div class="spinner" id="spinner" style="display:none;">
                 <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-                    <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div class="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
             </div>
 
@@ -41,27 +41,15 @@ $maintenance = $db->fetch_maintenance();
 
     <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-5"><?=$maintenance['system_name']?></h2>
 
-    <form id="frmLogin" class="space-y-4 sm:space-y-5">
+    <form id="frmForgotPassword" class="space-y-6">
       <div>
-        <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
-        <input type="email" id="email" name="email" 
-               class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+        <input type="email" id="email" name="email" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-red-500" required>
       </div>
 
-      <div>
-        <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-        <input type="password" id="password" name="password" 
-               class="mt-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-      </div>
-
-     
-
-      <div>
-      <button type="submit" id="btnLogin" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-red-800 hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition duration-200">
-        Sign in
-        </button>
-        <a href="forgot" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-      </div>
+      <button type="submit" id="btnForgotPassword" class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75">
+        Request New Password
+      </button>
     </form>
   </div>
 

@@ -52,6 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
 
 
+        }else if($_POST['requestType'] =='ForgotPassword'){
+
+
+            $email=$_POST['email'];
+            echo $db->CheckEmail($email);
+           
         } else {
             echo 'requestType NOT FOUND';
         }

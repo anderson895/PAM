@@ -22,7 +22,7 @@ class global_class extends db_connect
             COUNT(*) AS totalRequest
         FROM `request`
         LEFT JOIN users ON users.id = request.request_user_id
-        WHERE request.request_status = 'Delivered'
+        
         GROUP BY users.fullname
     ";
 
@@ -48,6 +48,41 @@ class global_class extends db_connect
 }
 
 
+
+
+
+public function all_item_request()
+{
+    $query = "
+        SELECT 
+            assets.name,
+            COUNT(*) AS totalRequest
+        FROM `request_item`
+        LEFT JOIN assets ON assets.id = request_item.r_item_asset_id
+        
+        GROUP BY assets.name
+    ";
+
+    $result = $this->conn->query($query);
+
+    if ($result) {
+        $requestData = [];
+
+        while ($row = $result->fetch_assoc()) {
+            // Append the data to the array
+            $requestData[] = [
+                'name' => $row['name'],
+                'totalRequest' => $row['totalRequest']
+            ];
+        }
+
+        // Return the data as JSON
+        echo json_encode($requestData);
+    } else {
+        error_log('Database query failed: ' . $this->conn->error);
+        echo json_encode(['error' => 'Failed to retrieve monthly sales data']);
+    }
+}
 
 
 

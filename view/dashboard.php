@@ -66,6 +66,13 @@ if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){
 </div>
 
 
+<!-- Chart Section -->
+<div class="bg-white mt-6 p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Item</h3>
+        <div id="all_item_chart"></div>
+</div>
+
+
 
 
 
@@ -90,3 +97,4 @@ if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){
 
 
 <script src="assets/js/all_user_request.js"></script>
+<script src="assets/js/all_item_request.js"></script>

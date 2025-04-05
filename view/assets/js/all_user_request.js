@@ -1,41 +1,28 @@
 $(document).ready(function () {
-       // Fetch data from the PHP endpoint
-       $.ajax({
+    $.ajax({
         url: 'backend/end-points/all_user_request.php',
         method: 'GET',
         success: function(response) {
-            // Parse the response into a JavaScript object
             const data = JSON.parse(response);
 
-            // Prepare data for the chart
-            const labels = data.map(item => item.fullname);
-            const totalRequests = data.map(item => item.totalRequest);
+            // Filter and format
+            const filteredData = data.filter(item => parseInt(item.totalRequest) > 0);
+            const labels = filteredData.map(item => item.fullname);
+            const totalRequests = filteredData.map(item => parseInt(item.totalRequest));
 
-            // Create the ApexChart
             var options = {
-                series: [{
-                    name: 'Total Requests',
-                    data: totalRequests
-                }],
+                series: totalRequests,
                 chart: {
-                    type: 'bar',
-                    height: 350
+                    type: 'pie',
+                    height: 400
                 },
-                xaxis: {
-                    categories: labels,
-                },
-                yaxis: {
-                    title: {
-                        text: 'Total Requests'
-                    }
-                },
+                labels: labels,
                 title: {
-                    text: 'All Delivered Request',
+                    text: 'All Delivered Requests (Pie Chart)',
                     align: 'center'
                 },
-                colors: ['#80000f']
+                colors: ['#80000f', '#cc000f', '#ff3333', '#ff6666', '#ff9999', '#ffcccc']
             };
-            
 
             var chart = new ApexCharts(document.querySelector("#all_request_chart"), options);
             chart.render();

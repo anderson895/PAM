@@ -369,6 +369,8 @@ $("#confirmRequest").click(function () {
                     $("#cartItemsList").html("<p>Your cart is empty.</p>");
                     $("#cartTotalPrice").text("₱0.00");
                     globalCartItems = []; // Clear cart
+
+                    localtion.reload()
                 
           
         },

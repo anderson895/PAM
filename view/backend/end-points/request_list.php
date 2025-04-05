@@ -57,6 +57,10 @@
                                                 View
                                             </button>
                                         </a>
+                                        <button class="bg-gray-500 text-white py-1 px-3 rounded-md btnArchive"
+                                        data-request_id="<?= htmlspecialchars($user['request_id']) ?>">
+                                                Archive
+                                        </button>
                                     </div>
                                 </td>
 

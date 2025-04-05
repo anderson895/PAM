@@ -352,10 +352,9 @@ class global_class extends db_connect
                 users.email AS user_email,
                 users.user_id,
                 users.designation as user_designation
-               
-                
             FROM `request`
             LEFT JOIN users ON users.id = request.request_user_id
+            WHERE request.status='1'
             ORDER BY request.request_id DESC
         ");
     
@@ -389,7 +388,7 @@ class global_class extends db_connect
                 
             FROM `request`
             LEFT JOIN users ON users.id = request.request_user_id
-            where request.request_user_id=$userID
+            where request.request_user_id=$userID AND request.status='1'
             ORDER BY request.request_id DESC
         ");
     
@@ -629,6 +628,20 @@ class global_class extends db_connect
 
 
   
+    public function ArchiveRequest($request_id) {
+        $status = 0; 
+        
+        $query = $this->conn->prepare(
+            "UPDATE `request` SET `status` = ? WHERE `request_id` = ?"
+        );
+        $query->bind_param("is", $status, $request_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
     
 
    

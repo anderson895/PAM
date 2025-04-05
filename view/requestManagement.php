@@ -70,10 +70,12 @@
                 <h3 class="font-bold"><?php echo htmlspecialchars(ucfirst($assets['name'])); ?></h3>
                 <p class="text-gray-600">₱<?php echo htmlspecialchars(number_format($assets['price'],2)); ?></p>
                 <button class="mt-2 w-full bg-blue-500 text-white py-2 rounded togglerViewCart" 
-                data-asset_id='<?=$assets['id']?>'
-                data-name='<?=ucfirst($assets['name'])?>'
-                data-variety='<?=$assets['variety']?>'
-                >Add</button>
+                        data-asset_id='<?=$assets['id']?>'
+                        data-name='<?=ucfirst($assets['name'])?>'
+                        data-variety='<?=$assets['variety']?>'>
+                <span class="material-icons align-middle mr-1">add</span>
+                </button>
+
             </div>
             <?php endwhile; ?>
             <?php else: ?>

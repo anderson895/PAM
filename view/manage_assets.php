@@ -81,7 +81,7 @@
 
 <!-- Modal for Adding Promo -->
 <div id="addAssetsModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center" style="display:none;">
-    <div class="bg-white rounded-lg shadow-lg w-[40rem] max-h-[80vh] overflow-y-auto p-6"> <!-- Added max-height and overflow-y-auto -->
+    <div class="bg-white rounded-lg shadow-lg w-[40rem] max-h-[80vh] overflow-y-auto p-6"> 
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Add New Assets</h3>
         <form id="addAssetFrm" >
             

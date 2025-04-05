@@ -546,6 +546,18 @@ if ($result == "success") {
             echo json_encode(["status" => 400, "message" => $result]);
         }
 
+    }else if($_POST['requestType'] =='ArchiveRequest'){
+
+
+        $request_id = $_POST['request_id'];
+
+        $result = $db->ArchiveRequest($request_id);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successful"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
     }else{
 
         echo "<pre>";

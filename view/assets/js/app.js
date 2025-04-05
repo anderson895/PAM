@@ -796,13 +796,6 @@ $(document).on('change', '.togglerRequest', function(e) {
                             'error'
                         );
                     }
-                },
-                error: function() {
-                    Swal.fire(
-                        'Error!',
-                        'There was a problem with the request.',
-                        'error'
-                    );
                 }
             });
         }
@@ -835,5 +828,58 @@ $(document).on('click', '.btnLogout', function(e) {
             window.location.href = 'logout.php';
 
         }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Archive HERE
+$(document).on('click', '.btnArchive', function(e) {
+    e.preventDefault();
+    var request_id = $(this).data('request_id');
+
+    console.log(request_id);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to archive this',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        $.ajax({
+            url: "backend/end-points/controller.php",
+            type: 'POST',
+            data: { request_id: request_id,requestType:'ArchiveRequest'},
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 200) {
+                    Swal.fire(
+                        'Success!',
+                        successMessage,
+                        'success'
+                    ).then(() => {
+                        location.reload(); 
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        response.message,
+                        'error'
+                    );
+                }
+            }
+        });
     });
 });

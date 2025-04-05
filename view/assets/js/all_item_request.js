@@ -30,7 +30,7 @@ $(document).ready(function () {
                  }
              },
              title: {
-                 text: 'All Delivered Request',
+                 text: 'All Request Item',
                  align: 'center'
              },
              colors: ['#80000f']

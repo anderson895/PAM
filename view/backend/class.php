@@ -623,6 +623,29 @@ class global_class extends db_connect
     }
     
 
+    public function count_notification()
+    {
+        $query = $this->conn->prepare("
+        SELECT  
+              COUNT(CASE WHEN `request`.`request_status` = 'pending' THEN 1 END) AS TotalPending
+          FROM `request`
+          where `request`.status='1'
+        
+  
+  
+      ");
+  
+      if ($query->execute()) {
+          $result = $query->get_result()->fetch_assoc();
+          // Return the result as JSON
+          echo json_encode($result);
+          return;
+      }
+    }
+    
+    
+    
+
   
     
 

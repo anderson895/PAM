@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    const getOrdersCount = () => {
+    const getCount = () => {
         $.ajax({
         url: "backend/end-points/count_notification.php",
           type: 'GET',
@@ -27,9 +27,9 @@ $(document).ready(function () {
     };
     
     setInterval(() => {
-        getOrdersCount();
+        getCount();
       }, 3000);
     
     
-      getOrdersCount();
+      getCount();
     });

@@ -61,15 +61,17 @@ if($_SESSION['role']=="Administrator" || $_SESSION['role']=="Office Heads"){
 
 <!-- Chart Section -->
 <div class="bg-white mt-6 p-6 rounded-lg shadow-md">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Overview</h3>
-        <div id="all_request_chart"></div>
-</div>
-
-
-<!-- Chart Section -->
-<div class="bg-white mt-6 p-6 rounded-lg shadow-md">
-        <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Item</h3>
-        <div id="all_item_chart"></div>
+  <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Overview</h3>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <div id="all_request_chart" class="h-64"></div>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Request Item</h3>
+      <div id="all_item_chart" class="h-64"></div>
+    </div>
+  </div>
 </div>
 
 

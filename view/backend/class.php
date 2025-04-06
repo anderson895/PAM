@@ -268,7 +268,7 @@ public function all_item_request()
         LEFT JOIN categories ON categories.id = assets.category_id 
         LEFT JOIN subcategories ON subcategories.id = assets.subcategory_id 
         LEFT JOIN offices ON offices.id = assets.office_id
-        where `status` = 'Under Maintenance'
+        where `status` = 'Under Maintenance' OR `status` = 'Disposed'
 
         ");
 
@@ -652,7 +652,7 @@ public function all_item_request()
     }
 
     public function fetch_all_user(){
-        $query = $this->conn->prepare("SELECT * FROM `users` where `status`='1'");
+        $query = $this->conn->prepare("SELECT * FROM `users`");
 
         if ($query->execute()) {
             $result = $query->get_result();
@@ -820,6 +820,39 @@ public function all_item_request()
             "UPDATE `request` SET `status` = ? WHERE `request_id` = ?"
         );
         $query->bind_param("is", $status, $request_id);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+    
+
+
+
+    public function RestoreUser($userId) {
+        $status = 1; 
+        
+        $query = $this->conn->prepare(
+            "UPDATE `users` SET `status` = ? WHERE `id` = ?"
+        );
+        $query->bind_param("is", $status, $userId);
+        
+        if ($query->execute()) {
+            return 'success';
+        } else {
+            return 'Error: ' . $query->error;
+        }
+    }
+
+
+    public function update_assets_status($asset_id,$update_assets_status) {
+      
+        $query = $this->conn->prepare(
+            "UPDATE `assets` SET `status` = ? WHERE `id` = ?"
+        );
+        $query->bind_param("si", $update_assets_status, $asset_id);
         
         if ($query->execute()) {
             return 'success';

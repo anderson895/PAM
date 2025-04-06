@@ -27,6 +27,15 @@
                         <td class="p-2"><?php echo htmlspecialchars($user['role']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['created_at']); ?></td>
                         <td class="p-2"><?php echo htmlspecialchars($user['designation']); ?></td>
+                        <td class="p-2">
+                        <?php if ($user['status'] == 1): ?>
+                            <span class="text-green-600 font-semibold">Active</span>
+                        <?php else: ?>
+                            <span class="text-red-600 font-semibold">Disabled</span>
+                        <?php endif; ?>
+                        </td>
+
+
 
                         <?php if (isset($On_Session[0]['role']) && $On_Session[0]['role'] == "Administrator") { ?>
                             <td class="p-2">
@@ -41,10 +50,18 @@
                                     Update
                                 </button>
 
-                                <button class="bg-red-500 text-white py-1 px-3 rounded-md togglerDeleteUser" 
+                                <?php if ($user['status'] == 1): ?>
+                                    <button class="bg-red-500 text-white py-1 px-3 rounded-md togglerDeleteUser" 
                                     data-id="<?= htmlspecialchars($user['id']) ?>">
-                                    Remove
+                                    Deactivate
                                 </button>
+                                <?php else: ?>
+                                    <button class="bg-green-500 text-white py-1 px-3 rounded-md togglerRestoreUser" 
+                                    data-id="<?= htmlspecialchars($user['id']) ?>">
+                                    Activate
+                                </button>
+                                <?php endif; ?>
+                               
                             </td>
                         <?php } ?>
                     </tr>

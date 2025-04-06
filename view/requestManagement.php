@@ -370,7 +370,7 @@ $("#confirmRequest").click(function () {
                     $("#cartTotalPrice").text("₱0.00");
                     globalCartItems = []; // Clear cart
 
-                    localtion.reload()
+                    location.reload()
                 
           
         },

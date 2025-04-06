@@ -21,35 +21,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         exit;
                     }
 
-                    // Attempt login
-                    $user = $db->Login($email, $password);
+                    $userResult = $db->Login($email, $password);
 
-                    if ($user) {
-                        // Start session securely
-                        if (session_status() == PHP_SESSION_NONE) {
-                            session_start();
-                        }
-                        session_regenerate_id(true);
-
-                        // Determine the redirect path based on user_type
-                        $redirectPath = '';
-                        if ($user['role'] === 'Administrator') {
-                            $redirectPath = 'view/dashboard';
-                        } else {
-                            $redirectPath = 'view/home';
-                        }
-
+                    if ($userResult['status'] === 'success') {
+                        $user = $userResult['user'];
+                    
+                        $redirectPath = ($user['role'] === 'Administrator') ? 'view/dashboard' : 'view/home';
+                    
                         echo json_encode([
                             'status' => 'success',
                             'message' => 'Login successful',
-                            'redirect' => $redirectPath // Send the redirect path
+                            'redirect' => $redirectPath
                         ]);
                     } else {
                         echo json_encode([
                             'status' => 'error',
-                            'message' => 'Invalid email or password.'
+                            'message' => $userResult['message']
                         ]);
                     }
+                    
 
 
         }else if($_POST['requestType'] =='ForgotPassword'){

@@ -558,13 +558,34 @@ if ($result == "success") {
         } else {
             echo json_encode(["status" => 400, "message" => $result]);
         }
+    }else if($_POST['requestType'] =='RestoreUser'){
+
+
+        $userId = $_POST['userId'];
+
+        $result = $db->RestoreUser($userId);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successful"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+    }else if($_POST['requestType'] =='update_assets_status'){
+
+
+        $asset_id = $_POST['asset_id'];
+        $update_assets_status = $_POST['update_assets_status'];
+
+        $result = $db->update_assets_status($asset_id,$update_assets_status);
+
+        if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Successful"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
     }else if($_POST['requestType'] =='UpdatePassword'){
 
         session_start();
-        // echo "<pre>";
-        // print_r($_SESSION);
-        // echo "</pre>";
-
         $user_id = $_SESSION['id'];
         $password = $_POST['password'];
        

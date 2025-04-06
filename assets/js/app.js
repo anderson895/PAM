@@ -52,7 +52,7 @@ $("#frmLogin").submit(function (e) {
                 $('.spinner').hide();
                 $('#btnLoginGuidance').prop('disabled', false);
                 console.error(response);
-                alertify.error('Login failed, please try again.');
+                alertify.error(data.message);
             }
         },
         error: function () {

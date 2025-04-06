@@ -31,6 +31,17 @@ if ($fetch_all_user->num_rows > 0):
     <td class="p-2"><?php echo htmlspecialchars($user['office_name']); ?></td>
     <td class="p-2"><?php echo htmlspecialchars($user['purchase_date']); ?></td>
     <td class="p-2"><?php echo htmlspecialchars($user['status']); ?></td>
+    <td class="p-2">
+        <div class="mb-4">
+                <select name="assets_status" id="repair_assets" class="w-full p-2 border rounded-md"
+                    data-asset_id="<?= $user['id']; ?>">
+                    <option value="Available" <?php if($user['status'] == "Available") echo "selected"; ?>>Available</option>
+                    <option value="Assigned" <?php if($user['status'] == "Assigned") echo "selected"; ?>>Assigned</option>
+                    <option value="Under Maintenance" <?php if($user['status'] == "Under Maintenance") echo "selected"; ?>>Under Maintenance</option>
+                    <option value="Disposed" <?php if($user['status'] == "Disposed") echo "selected"; ?>>Disposed</option>
+                </select>
+        </div>
+    </td>
 
    
 </tr>
@@ -38,7 +49,7 @@ if ($fetch_all_user->num_rows > 0):
 <?php endwhile; ?>
 <?php else: ?>
 <tr>
-    <td colspan="9" class="p-2 text-center">No record found.</td>
+    <td colspan="12" class="p-2 text-center">No record found.</td>
 </tr>
 <?php endif; ?>
 

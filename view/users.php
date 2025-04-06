@@ -63,6 +63,7 @@
                     <th class="p-3">User Type</th>
                     <th class="p-3">Created At</th>
                     <th class="p-3">Office Designation</th>
+                    <th class="p-3">Status</th>
                     
                     <?php if ($On_Session[0]['role'] == "Administrator") {
                         echo '<th class="p-3">Action</th>';

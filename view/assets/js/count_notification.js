@@ -6,7 +6,7 @@ $(document).ready(function () {
           type: 'GET',
           dataType: 'json',
           success: function(response) {
-              console.log(response.PendingCounts);
+            //   console.log(response.PendingCounts);
     
               let PendingCounts = response.PendingCounts;
               $('#PendingCounts').text(PendingCounts);

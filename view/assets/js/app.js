@@ -1,5 +1,63 @@
 
 
+$(document).on('change', '#repair_assets', function (e) {
+    e.preventDefault();
+
+    let asset_id = $(this).data('asset_id');
+    let update_assets_status = $(this).val();
+
+    console.log(update_assets_status);
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `${update_assets_status} this`, // Corrected template literal
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'backend/end-points/controller.php',
+                type: 'POST',
+                data: {
+                    asset_id: asset_id,
+                    update_assets_status: update_assets_status,
+                    requestType: 'update_assets_status'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 200) {
+                        Swal.fire(
+                            'Success!',
+                            response.message,
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function () {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem with the request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+
+
+
 $("#frmUpdatePassword").submit(function (e) {
     e.preventDefault();
     $('.spinner').show();
@@ -774,10 +832,10 @@ $("#frmAddTocart").submit(function (e) {
     
     Swal.fire({
         title: 'Are you sure?',
-        text: 'Archive This',
+        text: 'Deactivate This',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes',
         cancelButtonText: 'No, cancel!',
     }).then((result) => {
         if (result.isConfirmed) {
@@ -785,12 +843,12 @@ $("#frmAddTocart").submit(function (e) {
                 url: "backend/end-points/controller.php",
                 type: 'POST',
                 data: { userId: userId, requestType: 'DeleteUser' },
-                dataType: 'json',  // Expect a JSON response
+                dataType: 'json', 
                 success: function(response) {
                     if (response.status === 200) {
                         Swal.fire(
                             'Deleted!',
-                            response.message,  // Show the success message from the response
+                            response.message, 
                             'success'
                         ).then(() => {
                             location.reload(); 
@@ -798,7 +856,65 @@ $("#frmAddTocart").submit(function (e) {
                     } else {
                         Swal.fire(
                             'Error!',
-                            response.message,  // Show the error message from the response
+                            response.message, 
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error!',
+                        'There was a problem with the request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+$(document).on('click', '.togglerRestoreUser', function(e) {
+    e.preventDefault();
+    var userId = $(this).data('id');
+
+    console.log(userId);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Activate This',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { userId: userId, requestType: 'RestoreUser' },
+                dataType: 'json', 
+                success: function(response) {
+                    if (response.status === 200) {
+                        Swal.fire(
+                            'Deleted!',
+                            response.message, 
+                            'success'
+                        ).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            response.message, 
                             'error'
                         );
                     }

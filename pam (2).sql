@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 05, 2025 at 05:06 PM
+-- Generation Time: Apr 06, 2025 at 06:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -51,8 +51,8 @@ INSERT INTO `assets` (`id`, `asset_code`, `name`, `category_id`, `subcategory_id
 (126, '000001', 'pencil', 3, 37, 12, '2025-04-02 03:29:52', 12.00, 'New', 'Available', 'Assets_67ecaf21806be.webp', 'cfnfcfch', '{\"name\":\"brand\",\"values\":[\"mongol 1\"]}'),
 (127, '000002', 'scissor', 3, 37, 12, '2025-04-02 03:33:31', 30.00, 'New', 'Available', 'Assets_67ecb00b3b26a.jpg', 'aawd', '{\"name\":\"color\",\"values\":[\"red\",\"green\",\"blue\"]}'),
 (128, '000003', 'eraser', 3, 37, 12, '2025-04-03 11:46:15', 30.00, 'New', 'Available', 'Assets_67ecb25354a75.jpg', 'pambura', '{\"name\":\"shape\",\"values\":[\"triangle\",\"square\",\"circle\"]}'),
-(129, '000004', 'laptop', 2, 31, 15, '2025-04-02 14:54:51', 500.00, 'New', 'Available', 'Assets_67ed4fbbd3c45.webp', '', '{\"name\":\"brand\",\"values\":[\"hp\",\"lenovo\",\"samsung\"]}'),
-(130, '000005', 'printer', 2, 33, 15, '2025-04-03 11:29:06', 150.00, 'New', 'Available', 'Assets_67ee710235f19.jpg', '', '{\"name\":\"brand\",\"values\":[\"epson\",\"cannon\",\"hp\",\"brother\"]}');
+(129, '000004', 'laptop', 2, 31, 15, '2025-04-06 03:36:56', 500.00, 'Good', 'Available', 'Assets_67ed4fbbd3c45.webp', '', '{\"name\":\"brand\",\"values\":[\"hp\",\"lenovo\",\"samsung\"]}'),
+(130, '000005', 'printer', 2, 33, 15, '2025-04-06 03:37:06', 150.00, 'New', 'Disposed', 'Assets_67ee710235f19.jpg', '', '{\"name\":\"brand\",\"values\":[\"epson\",\"cannon\",\"hp\",\"brother\"]}');
 
 -- --------------------------------------------------------
 
@@ -143,7 +143,7 @@ CREATE TABLE `request` (
   `request_designation` varchar(60) NOT NULL,
   `request_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `request_status` varchar(60) NOT NULL DEFAULT 'pending',
-  `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=deleted,1=exist'
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=archive,1=exist'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -151,12 +151,15 @@ CREATE TABLE `request` (
 --
 
 INSERT INTO `request` (`request_id`, `request_invoice`, `request_user_id`, `request_supplier_name`, `request_supplier_company`, `request_designation`, `request_date`, `request_status`, `status`) VALUES
-(16, 'REQ-17435944699126', 1, 'j supply', 'j company', 'Library', '2025-04-05 14:54:20', 'Pending', 1),
-(17, 'REQ-17436060249325', 80141, 'j supply', 'jcom', 'Computer Lab', '2025-04-05 15:05:09', 'Delivered', 0),
-(18, 'REQ-17436721805447', 80141, 'j supply', 'j com', 'HRDO', '2025-04-05 15:05:17', 'pending', 0),
-(19, 'REQ-17436722272526', 80141, 'j supply', 'j com', 'VPAA', '2025-04-05 14:54:29', 'pending', 1),
-(20, 'REQ-17436723338441', 80141, 'j supply', 'j com', 'VPAA', '2025-04-05 15:05:23', 'pending', 0),
-(21, 'REQ-17436724223866', 80141, 'j supply', 'j com', 'VPAA', '2025-04-05 15:05:30', 'pending', 0);
+(16, 'REQ-17435944699126', 1, 'j supply', 'j company', 'Library', '2025-04-06 04:22:00', 'Approve', 0),
+(17, 'REQ-17436060249325', 80141, 'j supply', 'jcom', 'Computer Lab', '2025-04-06 04:22:22', 'Delivered', 0),
+(18, 'REQ-17436721805447', 80141, 'j supply', 'j com', 'HRDO', '2025-04-06 04:23:09', 'Approve', 0),
+(19, 'REQ-17436722272526', 80141, 'j supply', 'j com', 'VPAA', '2025-04-06 03:03:23', 'Approve', 1),
+(20, 'REQ-17436723338441', 80141, 'j supply', 'j com', 'VPAA', '2025-04-06 03:03:19', 'Approve', 1),
+(21, 'REQ-17436724223866', 80141, 'j supply', 'j com', 'VPAA', '2025-04-05 15:58:37', 'Approve', 1),
+(22, 'REQ-17438732504587', 80139, 'j supply', 'j company', 'Library', '2025-04-06 03:03:16', 'Approve', 1),
+(23, 'REQ-17438733178276', 80139, 'j supply', 'j company', 'VPAA', '2025-04-06 03:03:04', 'Approve', 1),
+(24, 'REQ-17439087663656', 1, 'j supply', 'j company', 'Library', '2025-04-06 04:23:47', 'Delivered', 0);
 
 -- --------------------------------------------------------
 
@@ -171,16 +174,6 @@ CREATE TABLE `request_cart` (
   `cart_qty` int(11) NOT NULL,
   `cart_variety` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `request_cart`
---
-
-INSERT INTO `request_cart` (`cart_id`, `cart_user_id`, `cart_asset_id`, `cart_qty`, `cart_variety`) VALUES
-(39, 1, 126, 3, 'mongol 1'),
-(41, 1, 128, 1, 'triangle'),
-(42, 1, 127, 3, 'green'),
-(43, 1, 127, 1, 'blue');
 
 -- --------------------------------------------------------
 
@@ -215,7 +208,11 @@ INSERT INTO `request_item` (`r_item_id`, `r_request_id`, `r_item_asset_id`, `r_i
 (13, 20, 127, 3, 'Green', 30.00),
 (14, 20, 129, 1, 'Lenovo', 500.00),
 (15, 21, 127, 5, 'Green', 30.00),
-(16, 21, 128, 1, 'Square', 30.00);
+(16, 21, 128, 1, 'Square', 30.00),
+(17, 22, 126, 1, 'Mongol 1', 12.00),
+(18, 23, 130, 3, 'Cannon', 150.00),
+(19, 24, 128, 3, 'Square', 30.00),
+(20, 24, 128, 2, 'Circle', 30.00);
 
 -- --------------------------------------------------------
 
@@ -304,8 +301,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_id`, `email`, `password`, `fullname`, `nickname`, `role`, `designation`, `profile_picture`, `created_at`, `status`) VALUES
-(1, '85623', 'admin@gmail.com', '$2y$10$kbDGD4CzxKZN5dRpp0eoV.azp7.yNniWsyPwb7jQ/QRoCeoZslw82', 'Joshua Padilla', 'admin', 'Administrator', 'Computer Lab', 'Profile_67dd240ef2143.jpeg', '2025-04-04 04:16:45', 1),
-(80138, '000001', 'andersonandy@gmail.com', '$2y$10$fzfuF1upMoglgqkEDKi.TuixFOINa9pc77PRJhbp/Fgymw4NidXsm', 'joshua padilla', 'andy', 'Finance', 'Registrar\'s Office', 'Profile_67ebdf948c3c2.webp', '2025-04-01 12:49:22', 1),
+(1, '85623', 'admin@gmail.com', '$2y$10$nKEzNOaEHtuxjTf/SCBWvuleXJfWVCO25h.LMsNdEhzrfqCS.b4HO', 'Joshua Padilla', 'admin', 'Administrator', 'Computer Lab', 'Profile_67dd240ef2143.jpeg', '2025-04-05 17:36:04', 1),
+(80138, '000001', 'andersonandy046@gmail.com', '$2y$10$9mUme9HoBNlY3h2GC.rCPO1DDLLyL3NX1hcDF84CAtc5T8dAcq3be', 'joshua padilla', 'andy', 'Finance', 'Registrar\'s Office', 'Profile_67ebdf948c3c2.webp', '2025-04-06 03:01:13', 1),
 (80139, '8888888', 'juan@gmail.com', '$2y$10$52e/tl0yPplDEA7SFuT7MuII2.1jhzTpfSh8tB2.JZCUhqJTtoXmu', 'juan', 'juan', 'Finance', 'VPAA', 'Profile_67ebe1e2b2142.jpeg', '2025-04-01 12:53:54', 1),
 (80140, '99999', 'alucard@gmail.com', '$2y$10$ANwZ3KWOPgjomLNQBGX02OuG/LpmIKYPj91TbXziAE2fFezBtB8ni', 'alucard', 'calu', 'Office Heads', 'Registrar\'s Office', NULL, '2025-04-01 12:59:23', 1),
 (80141, '56454564', 'layla@gmail.com', '$2y$10$FatWpQPFn6oQGZrc0yQa8eybcqUvlYHlv/UbAZaCYwYmrQvsx9j.i', 'layla', 'layla', 'Finance', 'Registrar\'s Office', NULL, '2025-04-01 13:01:26', 1);
@@ -387,7 +384,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `assets`
 --
 ALTER TABLE `assets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -411,19 +408,19 @@ ALTER TABLE `recieved_logs`
 -- AUTO_INCREMENT for table `request`
 --
 ALTER TABLE `request`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `request_cart`
 --
 ALTER TABLE `request_cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `request_item`
 --
 ALTER TABLE `request_item`
-  MODIFY `r_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `r_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `subcategories`

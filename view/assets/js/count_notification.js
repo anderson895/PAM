@@ -12,10 +12,19 @@ $(document).ready(function () {
               $('#PendingCounts').text(PendingCounts);
     
               if (PendingCounts > 0) {
-                $('#PendingCounts').show();
-            } else {
-                $('#PendingCounts').hide();
-            }
+                  $('#PendingCounts').show();
+              } else {
+                  $('#PendingCounts').hide();
+              }
+       
+              let UnderMaintenanceCounts = response.UnderMaintenanceCounts;
+              $('#UnderMaintenanceCounts').text(UnderMaintenanceCounts);
+    
+              if (UnderMaintenanceCounts > 0) {
+                  $('#UnderMaintenanceCounts').show();
+              } else {
+                  $('#UnderMaintenanceCounts').hide();
+              }
        
               
               

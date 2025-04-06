@@ -47,4 +47,64 @@
     </form>
 </div>
 
+
+
+
+<!-- Search Input with Icon -->
+<div class="relative mb-4 w-full max-w-md">
+    <span class="absolute inset-y-0 left-3 flex items-center text-gray-500">
+        <i class="material-icons text-lg">search</i>
+    </span>
+    <input type="text" id="searchInput" placeholder="Search users..." 
+        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-400 focus:border-red-400 transition">
+</div>
+
+<!-- User Table Card -->
+<div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+  
+    <!-- Table Wrapper for Responsiveness -->
+    <div class="overflow-x-auto">
+        <table id="userTable" class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="p-3">#</th>
+                    <th class="p-3">Image</th>
+                    <th class="p-3">Asset ID</th>
+                    <th class="p-3">Name</th>
+                    <th class="p-3">Description</th>
+                    <th class="p-3">Category</th>
+                    <th class="p-3">Subcategory</th>
+                    <th class="p-3">Condition</th>
+                    <th class="p-3">Office</th>
+                    <th class="p-3">Purchase Date</th>
+                    <th class="p-3">Status</th>
+                    
+                   
+                </tr>
+            </thead>
+            <tbody>
+            <?php include "backend/end-points/under_maintinance_list.php"; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+
+$(document).ready(function () {
+    $("#searchInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#userTable tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
+</script>
+
+
 <?php include "components/footer.php";?>

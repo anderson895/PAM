@@ -37,7 +37,7 @@
 
         <div class="mb-6">
             <label for="cpassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-            <input type="text" id="cpassword" name="cpassword" value="" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm" placeholder="Enter Confirm Password" />
+            <input type="password" id="cpassword" name="cpassword" value="" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm" placeholder="Enter Confirm Password" />
         </div>
 
         
@@ -50,5 +50,9 @@
         </div>
     </form>
 </div>
+
+
+
+
 
 <?php include "components/footer.php";?>

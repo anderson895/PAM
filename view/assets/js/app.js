@@ -938,8 +938,6 @@ $(document).on('click', '.btnArchive', function(e) {
                 if (response.status === 200) {
                     Swal.fire(
                         'Success!',
-                        successMessage,
-                        'success'
                     ).then(() => {
                         location.reload(); 
                     });

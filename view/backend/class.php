@@ -250,7 +250,42 @@ public function all_item_request()
         FROM `assets`
         LEFT JOIN categories ON categories.id = assets.category_id 
         LEFT JOIN subcategories ON subcategories.id = assets.subcategory_id 
-        LEFT JOIN offices ON offices.id = assets.office_id;
+        LEFT JOIN offices ON offices.id = assets.office_id
+
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+
+    public function under_maintinance_list(){
+        $query = $this->conn->prepare("SELECT assets.*,categories.category_name,categories.id as cat_id,subcategories.subcategory_name,subcategories.id as sub_id,offices.office_name,offices.id as off_id
+        FROM `assets`
+        LEFT JOIN categories ON categories.id = assets.category_id 
+        LEFT JOIN subcategories ON subcategories.id = assets.subcategory_id 
+        LEFT JOIN offices ON offices.id = assets.office_id
+        where `status` = 'Under Maintenance'
+
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+    public function fetch_all_assets_procurment(){
+        $query = $this->conn->prepare("SELECT assets.*,categories.category_name,categories.id as cat_id,subcategories.subcategory_name,subcategories.id as sub_id,offices.office_name,offices.id as off_id
+        FROM `assets`
+        LEFT JOIN categories ON categories.id = assets.category_id 
+        LEFT JOIN subcategories ON subcategories.id = assets.subcategory_id 
+        LEFT JOIN offices ON offices.id = assets.office_id
+        where (condition_status = 'New' OR condition_status = 'Good') AND(`status` = 'Available' OR `status` = 'Disposed')
 
         ");
 
@@ -398,6 +433,50 @@ public function all_item_request()
             return $result;
         }
     }
+
+
+
+    public function fetch_all_request_report() {
+        $query = $this->conn->prepare("
+            SELECT 
+                request.request_id,
+                request.request_invoice,
+                request.request_designation,
+                request.request_date,
+                request.request_user_id,
+                request.request_status,
+                request.request_supplier_name,
+                request.request_supplier_company,
+                
+                -- User Fields
+                users.id AS user_id,
+                users.fullname AS user_fullname,
+                users.email AS user_email,
+                users.user_id,
+                users.designation AS user_designation,
+                
+                -- Assets Fields
+                assets.id AS assets_id,
+                assets.name AS assets_name,
+                assets.price AS assets_price,
+
+                 -- Request item Fields
+                request_item.r_item_qty AS request_qty,
+                request_item.r_item_variety AS request_variety
+                
+            FROM `request`
+            LEFT JOIN users ON users.id = request.request_user_id
+            LEFT JOIN request_item ON request_item.r_request_id = request.request_id 
+            LEFT JOIN assets ON assets.id = request_item.r_item_asset_id
+            ORDER BY request.request_id DESC
+        ");
+    
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+    
 
 
     public function fetch_all_request($userID) {
@@ -683,22 +762,46 @@ public function all_item_request()
     
 
     public function count_notification()
-{
-    $query = $this->conn->prepare("
-        SELECT  
+    {
+        // Count pending requests
+        $pendingQuery = $this->conn->prepare("
+            SELECT  
             COUNT(CASE WHEN request.request_status = 'pending' THEN 1 END) AS PendingCounts
         FROM request
         LEFT JOIN users ON users.user_id = request.request_user_id
         WHERE request.status = '1'
+        ");
         
-    ");
-
-    if ($query->execute()) {
-        $result = $query->get_result()->fetch_assoc();
-        echo json_encode($result);
-        return;
+        // Count assets under maintenance
+        $maintenanceQuery = $this->conn->prepare("
+            SELECT COUNT(*) AS UnderMaintenanceCounts 
+            FROM assets 
+            WHERE status = 'Under Maintenance'
+        ");
+    
+        $pendingCount = 0;
+        $maintenanceCount = 0;
+    
+        if ($pendingQuery->execute()) {
+            $pendingResult = $pendingQuery->get_result()->fetch_assoc();
+            $pendingCount = $pendingResult['PendingCounts'];
+        }
+    
+        if ($maintenanceQuery->execute()) {
+            $maintenanceResult = $maintenanceQuery->get_result()->fetch_assoc();
+            $maintenanceCount = $maintenanceResult['UnderMaintenanceCounts'];
+        }
+    
+        // Return combined result
+        echo json_encode([
+            'PendingCounts' => $pendingCount,
+            'UnderMaintenanceCounts' => $maintenanceCount
+        ]);
     }
-}
+    
+
+
+
 
     
     

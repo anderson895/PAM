@@ -195,7 +195,7 @@
                 <select name="assets_condition" id="add_assets_condition" class="w-full p-2 border rounded-md" required>
                     <option value="New">New</option>
                     <option value="Good">Good</option>
-                    <option value="Needs Repair">Need Repair</option>
+                    <option value="Needs Repair">Needs Repair</option>
                     <option value="Damaged">Damaged</option>
                 </select>
             </div>
@@ -359,7 +359,7 @@
                 <select name="assets_condition" id="update_assets_condition" class="w-full p-2 border rounded-md" required>
                     <option value="New">New</option>
                     <option value="Good">Good</option>
-                    <option value="Need Repair">Need Repair</option>
+                    <option value="Needs Repair">Needs Repair</option>
                     <option value="Damaged">Damaged</option>
                 </select>
             </div>
@@ -409,29 +409,19 @@
 
 $(document).ready(function () {
 
-
-
-
-
-
-
-
-
-
     $("#add_assets_category").change(function () {
-        var selectedCategory = $(this).val(); // Kunin ang napiling category ID
+        var selectedCategory = $(this).val(); 
 
         $("#add_assets_subcategory option").each(function () {
-            var subcategoryCategoryId = $(this).data("category_id"); // Kunin ang category_id ng subcategory
+            var subcategoryCategoryId = $(this).data("category_id"); 
 
             if (!subcategoryCategoryId || subcategoryCategoryId == selectedCategory) {
-                $(this).show(); // Ipakita kung tugma ang category_id
+                $(this).show(); 
             } else {
-                $(this).hide(); // Itago kung hindi tugma
+                $(this).hide(); 
             }
         });
 
-        // I-reset ang value ng subcategory dropdown
         $("#add_assets_subcategory").val("");
     });
 });

@@ -55,7 +55,7 @@
         </div>
         <div class="grid grid-cols-3 gap-4" id="assetsContainer">
             <?php 
-                $fetch_all_assets = $db->fetch_all_assets();
+                $fetch_all_assets = $db->fetch_all_assets_procurment();
                 if ($fetch_all_assets->num_rows > 0): 
                     while ($assets = $fetch_all_assets->fetch_assoc()): 
             ?>

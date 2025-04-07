@@ -60,7 +60,18 @@ $today = date('M. d, Y');
                 <?php endif; ?>
             </tbody>
         </table>
-        
+         <!-- Footer Signatures -->
+        <!-- <div class="mt-12 grid grid-cols-3 gap-4 text-center text-sm">
+            <div>
+                <p class="border-t border-gray-600 pt-2">Prepared by</p>
+            </div>
+            <div>
+                <p class="border-t border-gray-600 pt-2">Noted by</p>
+            </div>
+            <div>
+                <p class="border-t border-gray-600 pt-2">Approved by</p>
+            </div>
+        </div> -->
         
     </div>
 </div>

@@ -1,29 +1,20 @@
 <?php 
-include('../class.php');
-$db = new global_class();
+
+
+include "components/header.php";
 $fetch_all_user = $db->fetch_all_request_report();
 $maintenance = $db->fetch_maintenance();
 
 date_default_timezone_set('Asia/Manila');
-session_start();
 
-if (isset($_SESSION['id'])) {
-    $id = intval($_SESSION['id']);
-    $On_Session = $db->check_account($id);
-}
 
 $today = date('M. d, Y');
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Procurement Report</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white text-black p-8">
+
+
+<div id="printArea">
     <!-- Header -->
-    <div class="text-center mb-6">
+    <div class="text-center mb-6" >
         <img src="../assets/logo/<?=$maintenance['system_image']?>" alt="School Logo" class="mx-auto w-20 mb-2"> <!-- Optional -->
         <h1 class="text-xl font-bold uppercase text-red-700">Westmead International School</h1>
         <p class="text-sm">122 Gulod Labac, Batangas City, Batangas</p><?=$maintenance['system_image']?>
@@ -88,5 +79,36 @@ $today = date('M. d, Y');
             <p class="border-t border-gray-600 pt-2">Approved by</p>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+    <hr>
+    <div class="text-center my-4">
+    <button id="printButton" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Print Report
+    </button>
+</div>
+<script>
+    $('#printButton').on('click', function () {
+        var printContents = $('#printArea').html();
+        var printWindow = window.open('', '', 'height=800,width=1000');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print Report</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+                    <style>
+                        body { padding: 20px; font-family: sans-serif; }
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                    </style>
+                </head>
+                <body onload="window.print(); setTimeout(() => window.close(), 100);">
+                    ${printContents}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+    });
+</script>
+<?php include "components/footer.php";?>

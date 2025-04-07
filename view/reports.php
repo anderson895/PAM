@@ -26,62 +26,27 @@
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 class="text-lg font-semibold mb-4">Inventory Report</h3>
             <p class="text-gray-600 mb-4">Summary of student performance.</p>
-            <button class="print-report-inv bg-red-500 text-white px-4 py-2 rounded-md mt-2">
-                Print Report
-            </button>
+            <a href="print_inventory_report">
+                <button class="print-report-inv bg-red-500 text-white px-4 py-2 rounded-md mt-2">
+                    View Report
+                </button>
+            </a>
+           
         </div>
 
         <!-- Card 2 (Procurements Report) -->
         <div class="bg-white p-6 rounded-lg shadow-md text-center">
             <h3 class="text-lg font-semibold mb-4">Procurements Report</h3>
             <p class="text-gray-600 mb-4">Detailed procurement overview.</p>
+            <a href="print_procurement_report">
             <button class="print-report-procurements bg-red-500 text-white px-4 py-2 rounded-md mt-2">
-                Print Report
+                View Report
             </button>
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Print Modal -->
-<div id="printSection" class="hidden"></div>
 
-<script>
-    $(document).ready(function () {
-        // Print Inventory Report
-        $(".print-report-inv").click(function () {
-            $.ajax({
-                url: "backend/end-points/print_inventory_report.php", 
-                type: "GET",
-                success: function (data) {
-                    var printWindow = window.open('', '', 'width=900,height=700');
-                    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">'); // Load Tailwind
-                    printWindow.document.write(data);
-                    printWindow.document.close();
-                    printWindow.print();
-                },
-                error: function () {
-                    alert("Failed to fetch the inventory report.");
-                }
-            });
-        });
-
-        // Print Procurements Report
-        $(".print-report-procurements").click(function () {
-            $.ajax({
-                url: "backend/end-points/print_procurement_report.php", 
-                type: "GET",
-                success: function (data) {
-                    var printWindow = window.open('', '', 'width=900,height=700');
-                    printWindow.document.write(data);
-                    printWindow.document.close();
-                    printWindow.print();
-                },
-                error: function () {
-                    alert("Failed to fetch the procurement report.");
-                }
-            });
-        });
-    });
-</script>
 
 <?php include "components/footer.php"; ?>

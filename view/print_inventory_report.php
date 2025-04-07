@@ -1,38 +1,14 @@
-<?php 
-include('../class.php');
-$db = new global_class();
+
+<?php include "components/header.php";
+
 $fetch_all_user = $db->fetch_all_assets();
 $maintenance = $db->fetch_maintenance();
-// Set the timezone to Asia/Manila
 date_default_timezone_set('Asia/Manila');
 
-session_start();
-
-if (isset($_SESSION['id'])) {
-    $id = intval($_SESSION['id']);
-
-   
-    $On_Session = $db->check_account($id);
-
-    // echo "<pre>";
-    // print_r($On_Session);
-    // echo "</pre>";
-  
-
-}
-
-// Get today's date
-$today = date('M. d, Y'); // Format: Jan. 30, 2025
+$today = date('M. d, Y'); 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Report</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-6">
+<div id="printArea">
+
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
        <!-- Header -->
         <div class="text-center mb-6">
@@ -86,12 +62,38 @@ $today = date('M. d, Y'); // Format: Jan. 30, 2025
         </table>
         
         
-    
-        <!-- <div class="mt-4 text-right">
-            <p class="text-sm"><strong>Subtotal:</strong> -</p>
-            <p class="text-sm"><strong>12% Tax:</strong> -</p>
-            <p class="text-sm font-bold"><strong>Total:</strong> -</p>
-        </div> -->
     </div>
-</body>
-</html>
+</div>
+
+<hr>
+    <div class="text-center my-4">
+    <button id="printButton" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Print Report
+    </button>
+</div>
+
+    <script>
+    $('#printButton').on('click', function () {
+        var printContents = $('#printArea').html();
+        var printWindow = window.open('', '', 'height=800,width=1000');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print Report</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+                    <style>
+                        body { padding: 20px; font-family: sans-serif; }
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                    </style>
+                </head>
+                <body onload="window.print(); setTimeout(() => window.close(), 100);">
+                    ${printContents}
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+    });
+</script>
+<?php include "components/footer.php";?>
